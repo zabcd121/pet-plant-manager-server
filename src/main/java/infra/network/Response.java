@@ -1,8 +1,9 @@
 package infra.network;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Response {
+public class Response implements Serializable {
     public enum StatusCode{
         SUCCESS, FAIL
     }

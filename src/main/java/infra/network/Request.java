@@ -1,8 +1,9 @@
 package infra.network;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Request {
+public class Request implements Serializable {
     public enum Method{
         GET, POST
     }
