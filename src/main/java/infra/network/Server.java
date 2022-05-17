@@ -1,5 +1,7 @@
 package infra.network;
 
+import controller.MainController;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -7,20 +9,20 @@ public class Server extends Thread {
     private Socket soc;
     private ObjectInputStream is;
     private ObjectOutputStream os;
+    private MainController mainController;
     private int threadID;
     private boolean running;
 
     public Server(Socket socket, int id) {
         soc = socket;
         threadID = id;
+        mainController = new MainController();
         try{
             is = new ObjectInputStream(
                     soc.getInputStream()
-//                    new BufferedInputStream(soc.getInputStream())
             );
             os = new ObjectOutputStream(
                     soc.getOutputStream()
-//                    new BufferedOutputStream(soc.getOutputStream())
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,9 +37,8 @@ public class Server extends Thread {
 
         while(running){
             try{
-                System.out.println("hello thread");
-                Request req = (Request)is.readObject();
-                System.out.println(req.url);
+                System.out.println("entry");
+                mainController.handle((Request) is.readObject());
             } catch (IOException e) {
                 e.printStackTrace();
                 exit();
