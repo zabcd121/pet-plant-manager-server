@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class AbstractRepository<E> {
@@ -16,11 +17,12 @@ public abstract class AbstractRepository<E> {
     protected abstract E restoreObject(ResultSet rs);
     protected abstract List<E> restoreList(ResultSet rs);
 
-    protected void executeUpdateOrDelete(Function<Connection, PreparedStatement> logic){
+    protected void executeUpdateOrDelete(String sql, Consumer<PreparedStatement> setStatement){
         PreparedStatement ps = null;
 
         try(Connection conn = ds.getConnection()){
-            ps = logic.apply(conn);
+            ps = conn.prepareStatement(sql);
+            setStatement.accept(ps);
             ps.executeUpdate();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -35,13 +37,14 @@ public abstract class AbstractRepository<E> {
         }
     }
 
-    protected E executeFindOne(Function<Connection, PreparedStatement> logic){
+    protected E executeFindOne(String sql, Consumer<PreparedStatement> setStatement){
         PreparedStatement ps = null;
         ResultSet rs = null;
         E restoredObj = null;
 
         try(Connection conn = ds.getConnection()){
-            ps = logic.apply(conn);
+            ps = conn.prepareStatement(sql);
+            setStatement.accept(ps);
             rs = ps.executeQuery();
             restoredObj = restoreObject(rs);
         } catch (SQLException sqlException) {
