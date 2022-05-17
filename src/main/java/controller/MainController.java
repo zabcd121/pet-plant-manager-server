@@ -1,12 +1,13 @@
 package controller;
 
+import domain.repository.AccountRepository;
 import infra.network.Request;
 
 public class MainController {
     private AccountController accController;
 
-    public MainController() {
-        accController = new AccountController();
+    public MainController(AccountRepository accRepo) {
+        accController = new AccountController(accRepo);
     }
 
     public void handle(Request req){

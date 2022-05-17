@@ -1,6 +1,7 @@
 package infra.network;
 
 import controller.MainController;
+import domain.repository.AccountRepository;
 
 import java.io.*;
 import java.net.Socket;
@@ -13,10 +14,10 @@ public class Server extends Thread {
     private int threadID;
     private boolean running;
 
-    public Server(Socket socket, int id) {
+    public Server(Socket socket, int id, AccountRepository accRepo) {
         soc = socket;
         threadID = id;
-        mainController = new MainController();
+        mainController = new MainController(accRepo);
         try{
             is = new ObjectInputStream(
                     soc.getInputStream()
