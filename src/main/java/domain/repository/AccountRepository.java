@@ -2,9 +2,9 @@ package domain.repository;
 
 import domain.model.Account;
 
-import java.util.List;
+import java.sql.SQLException;
 
 public interface AccountRepository {
-    public Account findByID(long id);
-    public long save(Account account);
+    Account findByID(long id) throws SQLException;
+    long save(Account account);
 }

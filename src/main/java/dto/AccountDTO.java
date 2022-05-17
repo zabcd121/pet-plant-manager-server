@@ -1,4 +1,4 @@
-package DTO;
+package dto;
 
 public class AccountDTO {
     private long pk;
