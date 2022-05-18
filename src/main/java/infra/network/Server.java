@@ -39,7 +39,8 @@ public class Server extends Thread {
         while(running){
             try{
                 System.out.println("entry");
-                mainController.handle((Request) is.readObject());
+                Response res = mainController.handle((Request) is.readObject());
+                os.writeObject(res);
             } catch (IOException e) {
                 e.printStackTrace();
                 exit();
