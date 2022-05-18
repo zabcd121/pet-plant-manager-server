@@ -14,15 +14,14 @@ import java.util.function.Function;
 public abstract class AbstractRepository<E> {
     private final DataSource ds = PooledDataSource.getDataSource();
 
-    protected abstract E restoreObject(ResultSet rs);
-    protected abstract List<E> restoreList(ResultSet rs);
+    protected abstract E restoreObject(ResultSet rs) throws SQLException;
+    protected abstract List<E> restoreList(ResultSet rs) throws SQLException;
 
-    protected void executeUpdateOrDelete(String sql, Consumer<PreparedStatement> setStatement){
+    protected void executeUpdateOrDelete(QueryMaker queryMaker){
         PreparedStatement ps = null;
 
         try(Connection conn = ds.getConnection()){
-            ps = conn.prepareStatement(sql);
-            setStatement.accept(ps);
+            ps = queryMaker.make(conn);
             ps.executeUpdate();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -37,14 +36,13 @@ public abstract class AbstractRepository<E> {
         }
     }
 
-    protected E executeFindOne(String sql, Consumer<PreparedStatement> setStatement){
+    protected E executeFindOne(QueryMaker queryMaker){
         PreparedStatement ps = null;
         ResultSet rs = null;
         E restoredObj = null;
 
         try(Connection conn = ds.getConnection()){
-            ps = conn.prepareStatement(sql);
-            setStatement.accept(ps);
+            ps = queryMaker.make(conn);
             rs = ps.executeQuery();
             restoredObj = restoreObject(rs);
         } catch (SQLException sqlException) {
@@ -65,13 +63,13 @@ public abstract class AbstractRepository<E> {
         return restoredObj;
     }
 
-    protected List<E> executeFindList(Function<Connection, PreparedStatement> logic){
+    protected List<E> executeFindList(QueryMaker queryMaker){
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<E> restoredList = null;
 
         try(Connection conn = ds.getConnection()){
-            ps = logic.apply(conn);
+            ps = queryMaker.make(conn);
             rs = ps.executeQuery();
             restoredList = restoreList(rs);
         } catch (SQLException sqlException) {
@@ -93,13 +91,13 @@ public abstract class AbstractRepository<E> {
     }
 
 
-    protected long executeInsert(Function<Connection, PreparedStatement> logic){
+    protected long executeInsert(QueryMaker queryMaker){
         PreparedStatement ps = null;
         ResultSet rs = null;
         long id = -1;
 
         try(Connection conn = ds.getConnection()){
-            ps = logic.apply(conn);
+            ps = queryMaker.make(conn);
             rs = ps.getGeneratedKeys();
             id = rs.getLong(1);
         } catch (SQLException sqlException) {

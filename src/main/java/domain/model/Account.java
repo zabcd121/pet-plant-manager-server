@@ -6,11 +6,13 @@ public class Account {
     private long pk;
     private String id;
     private String password;
+    private String token;
 
     public static class Builder{
         private long pk;
         private String id;
         private String password;
+        private String token;
 
         private Builder(String id, String password){
             this.pk = -1;
@@ -23,6 +25,11 @@ public class Account {
             return this;
         }
 
+        public Builder token(String value){
+            token = value;
+            return this;
+        }
+
         public Account build(){
             return new Account(this);
         }
@@ -32,10 +39,12 @@ public class Account {
         return new Builder(id, password);
     }
 
+    public Account(){}
     private Account(Builder builder){
         pk = builder.pk;
         id = builder.id;
         password = builder.password;
+        token = builder.token;
     }
 
     public boolean checkPassword(String pw){

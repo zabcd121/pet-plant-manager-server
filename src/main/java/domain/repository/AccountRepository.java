@@ -1,10 +1,13 @@
 package domain.repository;
 
 import domain.model.Account;
+import infra.database.option.Option;
 
-import java.sql.SQLException;
+import java.util.List;
 
 public interface AccountRepository {
-    Account findByID(long id) throws SQLException;
+    Account findByID(long id);
+    List<Account> findByOption(Option... options);
     long save(Account account);
+    void remove(Account account);
 }
