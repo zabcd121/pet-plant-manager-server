@@ -9,6 +9,7 @@ import infra.database.option.Option;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +65,16 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
     }
 
     private long add(AccountDTO dto) {
-        String query = "INSERT INTO accounts (account_ID, account_PW) VALUES(?, ?)";
+        String query = "INSERT INTO accounts (account_ID, account_PW, token) VALUES(?, ?, ?)";
 
         return executeInsert(conn -> {
-            PreparedStatement ps = conn.prepareStatement(query);
+            PreparedStatement ps = conn.prepareStatement(
+                    query,
+                    Statement.RETURN_GENERATED_KEYS
+            );
             ps.setString(1, dto.getId());
             ps.setString(2, dto.getPassword());
+            ps.setString(3, dto.getToken());
             return ps;
         });
     }
@@ -103,15 +108,17 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
         long pk = 0;
         String id = "";
         String password = "";
+        String token = "";
 
         while(rs.next()){
             pk = rs.getLong("account_PK");
             id = rs.getString("account_ID");
             password = rs.getString("account_PW");
+            token = rs.getString("token");
         }
 
 
-        return Account.builder(id, password).pk(pk).build();
+        return Account.builder(id, password).pk(pk).token(token).build();
     }
 
     @Override
@@ -122,7 +129,8 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
             Account acc = Account.builder(
                     rs.getString("account_ID"),
                     rs.getString("account_PW")
-            ).pk(rs.getLong("account_PK")).build();
+            ).pk(rs.getLong("account_PK"))
+                    .token(rs.getString("token")).build();
 
             list.add(acc);
         }

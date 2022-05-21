@@ -3,35 +3,38 @@ package application;
 import controller.AccountController;
 import domain.model.Account;
 import domain.repository.AccountRepository;
+import domain.service.AccountDomainService;
 import dto.AccountDTO;
 import dto.MessageDTO;
+import dto.ModelMapper;
 import infra.database.option.account.IDOption;
 
 public class AccountAppService {
     private AccountRepository accRepo;
+    private AccountDomainService accDomainService;
 
     public AccountAppService(AccountRepository accRepo) {
         this.accRepo = accRepo;
+        accDomainService = new AccountDomainService(accRepo);
     }
 
     public AccountDTO login(AccountDTO accDTO){
         AccountDTO res = null;
-        Account acc = null;
-        try{
-            acc = accRepo.findByOption(new IDOption(accDTO.getId())).get(0);
-            System.out.println("acc = " + acc);
-        }catch(Exception e){ // TODO : id가 없을 때 예외
-        }
 
-        if(acc!=null && acc.checkPassword(accDTO.getPassword())){
-            res = AccountDTO.builder().token("token").build();
-            System.out.println("로그인 성공");
-            //TDO : 로그인 성공 메시지
-        }else{
-            System.out.println("로그인 실패");
-            //TODO : 로그인 실패 메시지
+        Account acc = accDomainService.login(
+                accDTO.getToken(), accDTO.getId(), accDTO.getPassword()
+        );
+
+        if(acc!=null){
+            res = ModelMapper.<Account, AccountDTO>modelToDTO(acc, AccountDTO.class);
         }
 
         return res;
     }
+
+    public boolean signup(AccountDTO accDTO){
+        return accDomainService.signUp(accDTO.getId(), accDTO.getPassword());
+    }
+
+
 }

@@ -55,6 +55,10 @@ public class Account {
         password = pw;
     }
 
+    public String getToken(){
+        return token;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
