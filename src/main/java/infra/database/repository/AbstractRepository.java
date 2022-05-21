@@ -98,8 +98,12 @@ public abstract class AbstractRepository<E> {
 
         try(Connection conn = ds.getConnection()){
             ps = queryMaker.make(conn);
+            ps.executeUpdate();
             rs = ps.getGeneratedKeys();
-            id = rs.getLong(1);
+
+            while(rs.next()){
+                id = rs.getLong(1);
+            }
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }finally {
