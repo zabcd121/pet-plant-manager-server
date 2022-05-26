@@ -1,11 +1,15 @@
 package domain.model;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Account {
     private long pk;
     private String id;
     private String password;
+    private String name;
+    private Set<PetPlant> myPets = new HashSet<>();
     private String token;
 
     public static class Builder{
@@ -14,7 +18,7 @@ public class Account {
         private String password;
         private String token;
 
-        private Builder(String id, String password){
+        private Builder(String id, String password) {
             this.pk = -1;
             this.id = id;
             this.password = password;
