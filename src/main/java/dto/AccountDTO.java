@@ -1,14 +1,18 @@
-package DTO;
+package dto;
 
-public class AccountDTO {
+import java.io.Serializable;
+
+public class AccountDTO implements Serializable {
     private long pk;
     private String id;
     private String password;
+    private String token;
 
     public static class Builder{
         private long pk;
         private String id;
         private String password;
+        private String token;
 
         public Builder pk(long value){
             pk = value;
@@ -22,6 +26,11 @@ public class AccountDTO {
 
         public Builder password(String value){
             password = value;
+            return this;
+        }
+
+        public Builder token(String value){
+            token = value;
             return this;
         }
 
@@ -39,6 +48,7 @@ public class AccountDTO {
         pk = builder.pk;
         id = builder.id;
         password = builder.password;
+        token = builder.token;
     }
 
     public long getPk() {
@@ -53,4 +63,5 @@ public class AccountDTO {
         return password;
     }
 
+    public String getToken(){return token;}
 }

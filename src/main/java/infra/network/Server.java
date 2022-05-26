@@ -1,5 +1,8 @@
 package infra.network;
 
+import controller.MainController;
+import domain.repository.AccountRepository;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -7,20 +10,20 @@ public class Server extends Thread {
     private Socket soc;
     private ObjectInputStream is;
     private ObjectOutputStream os;
+    private MainController mainController;
     private int threadID;
     private boolean running;
 
-    public Server(Socket socket, int id) {
+    public Server(Socket socket, int id, AccountRepository accRepo) {
         soc = socket;
         threadID = id;
+        mainController = new MainController(accRepo);
         try{
             is = new ObjectInputStream(
                     soc.getInputStream()
-//                    new BufferedInputStream(soc.getInputStream())
             );
             os = new ObjectOutputStream(
                     soc.getOutputStream()
-//                    new BufferedOutputStream(soc.getOutputStream())
             );
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,9 +38,9 @@ public class Server extends Thread {
 
         while(running){
             try{
-                System.out.println("hello thread");
-                Request req = (Request)is.readObject();
-                System.out.println(req.url);
+                System.out.println("entry");
+                Response res = mainController.handle((Request) is.readObject());
+                os.writeObject(res);
             } catch (IOException e) {
                 e.printStackTrace();
                 exit();
