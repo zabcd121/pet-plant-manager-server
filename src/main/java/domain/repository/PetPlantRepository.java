@@ -1,16 +1,13 @@
 package domain.repository;
 
 import domain.model.PetPlant;
+import infra.database.option.Option;
 
 import java.util.List;
 
 public interface PetPlantRepository {
-
-    List<PetPlant> findAll();
-    PetPlant findBy(int id);
-    PetPlant findBy(String petName);
-    void save(PetPlant petPlant);
-    void insert(PetPlant pet);
-    void remove(PetPlant pet);
-
+    PetPlant findByID(long id);
+    List<PetPlant> findByOption(Option ...options);
+    long save(PetPlant petPlant);
+    void remove(PetPlant petPlant);
 }
