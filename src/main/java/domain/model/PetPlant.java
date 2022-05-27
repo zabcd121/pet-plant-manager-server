@@ -106,14 +106,4 @@ public class PetPlant{
     public void setPetImg(Byte[] petImg) {
         this.petImg = petImg;
     }
-
-    @Override
-    public String toString() {
-        return "PetPlant{" +
-                "pk=" + pk +
-                ", plantID=" + plantID +
-                ", petName='" + petName + '\'' +
-                ", firstMetDay=" + firstMetDay +
-                '}';
-    }
 }
