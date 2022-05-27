@@ -30,14 +30,7 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
 
     @Override
     public Plant findByID(long id) {
-        return executeFindOne(
-                SQLMaker.makeSelectSql(
-                        TABLE_NAME, new PKOption(id)
-                ),
-                ps -> {
-                    ps.setLong(1, id);
-                }
-        );
+        return executeFindOne( SQLMaker.makeSelectSql( TABLE_NAME, new PKOption(id)));
     }
 
     @Override

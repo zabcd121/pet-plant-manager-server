@@ -26,11 +26,7 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
 
     @Override
     public Account findByID(long id){
-        return executeFindOne(
-                SQLMaker.makeSelectSql(TABLE_NAME, new PKOption(id)),
-                ps -> {
-                    ps.setLong(1, id);
-        });
+        return executeFindOne( SQLMaker.makeSelectSql(TABLE_NAME, new PKOption(id)));
     }
 
     @Override

@@ -2,13 +2,15 @@ package dto;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @ToString
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PlantDTO {
+public class PlantDTO implements Serializable {
     private long pk;
     private String pltName;             // 식물 이름
     private float lightDemand;         // 광요구도

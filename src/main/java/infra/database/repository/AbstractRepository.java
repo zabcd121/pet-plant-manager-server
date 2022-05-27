@@ -33,14 +33,13 @@ public abstract class AbstractRepository<E> {
         }
     }
 
-    protected E executeFindOne(String sql, ParamsSetter paramsSetter){
+    protected E executeFindOne(String sql){
         PreparedStatement ps = null;
         ResultSet rs = null;
         E restoredObj = null;
 
         try(Connection conn = ds.getConnection()){
             ps = conn.prepareStatement(sql);
-            paramsSetter.setParams(ps);
             rs = ps.executeQuery();
             restoredObj = restoreObject(rs);
         } catch (SQLException sqlException) {
