@@ -10,5 +10,5 @@ public class PetPlantAppService {
         this.petPlantRepo = petPlantRepo;
     }
 
-    public void create(PetPlantDTO )
+
 }

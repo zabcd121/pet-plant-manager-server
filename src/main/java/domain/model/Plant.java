@@ -1,11 +1,19 @@
 package domain.model;
 
+import lombok.*;
+
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Plant {
     private long pk;
-    private String pltName;             // 식물 이름
+    private String pltName;          // 식물 이름
     private int lightDemand;         // 광요구도
     private int humidity;            // 습도
-    private int growthTp;               // 생육 온도
+    private int growthTp;            // 생육 온도
     private int sprWaterCycle;       // 봄 물주기
     private int sumWaterCycle;       // 여름 물주기
     private int fallWaterCycle;      // 가을 물주기

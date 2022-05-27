@@ -3,7 +3,7 @@ package domain.model;
 import java.util.Date;
 
 public class PetPlant{
-    private int pk;
+    private long pk;
     private int plantID;
     private String petName;
     private Date firstMetDay;
@@ -18,7 +18,7 @@ public class PetPlant{
     }
 
     public static class Builder{
-        private int pk = -1;
+        private long pk = -1;
         private int plantID;
         private String petName;
         private Date firstMetDay;
@@ -30,7 +30,7 @@ public class PetPlant{
             this.firstMetDay = firstMetDay;
         }
 
-        public Builder id(int pk){
+        public Builder id(long pk){
             this.pk = pk;
             return this;
         }
@@ -70,7 +70,7 @@ public class PetPlant{
         return new Builder(plantID, petName, firstMetDay);
     }
 
-    public int getPk() {
+    public long getPk() {
         return pk;
     }
 
@@ -87,7 +87,7 @@ public class PetPlant{
     }
 
     public Byte[] getPetImg() { return petImg; }
-    public void setPk(int pk) {
+    public void setPk(long pk) {
         this.pk = pk;
     }
 
