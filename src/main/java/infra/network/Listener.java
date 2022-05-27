@@ -1,6 +1,7 @@
 package infra.network;
 
 import domain.repository.AccountRepository;
+import domain.repository.PlantRepository;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -8,10 +9,12 @@ import java.net.Socket;
 
 //각 클라이언트와 TCP통신을 연결하고, 쓰레드를 생성하는 객체
 public class Listener {
-    AccountRepository accRepo;
+    private final AccountRepository accRepo;
+    private final PlantRepository plantRepo;
 
-    public Listener(AccountRepository accRepo){
+    public Listener(AccountRepository accRepo, PlantRepository plantRepo){
         this.accRepo = accRepo;
+        this.plantRepo = plantRepo;
 
         try{
             serverSocket = new ServerSocket(3000);
@@ -47,7 +50,7 @@ public class Listener {
         // 최대 스레드 개수를 넘지 않을 때만
         if (clientCount < clients.length) {
             clientCount++;
-            Server thread = new Server(socket, clientCount, accRepo);
+            Server thread = new Server(socket, clientCount, accRepo, plantRepo);
             clients[clientCount] = thread;     // 스레드 배열에 생성한 스레드 추가
             System.out.println("Create thread : clientCount = " + clientCount);
             System.out.println("client Port : " + thread.getClientID());

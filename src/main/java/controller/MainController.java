@@ -1,14 +1,17 @@
 package controller;
 
 import domain.repository.AccountRepository;
+import domain.repository.PlantRepository;
 import infra.network.Request;
 import infra.network.Response;
 
 public class MainController {
-    private AccountController accController;
+    private final AccountController accController;
+    private final PlantController plantController;
 
-    public MainController(AccountRepository accRepo) {
+    public MainController(AccountRepository accRepo, PlantRepository plantRepo) {
         accController = new AccountController(accRepo);
+        plantController = new PlantController(plantRepo);
     }
 
     public Response handle(Request req){
@@ -16,8 +19,10 @@ public class MainController {
 
         switch(firstLevel){
             case "account":{
-                System.out.println("firstLevel = " + firstLevel);
                 return accController.handle(req);
+            }
+            case "plant":{
+                return plantController.handle(req);
             }
         }
         return null;

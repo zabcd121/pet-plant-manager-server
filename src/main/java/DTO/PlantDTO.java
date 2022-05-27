@@ -2,6 +2,7 @@ package dto;
 
 import lombok.*;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
