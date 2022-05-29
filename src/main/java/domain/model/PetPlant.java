@@ -1,17 +1,24 @@
 package domain.model;
 
-import java.util.Date;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
+@NoArgsConstructor
+@Getter
 public class PetPlant{
     private long pk;
-    private int plantID;
+    private long plantID;
+    private long userID;
     private String petName;
-    private Date firstMetDay;
+    private LocalDate firstMetDay;
     private Byte[] petImg;
 
     private PetPlant(Builder builder){
         this.pk = builder.pk;
         this.plantID = builder.plantID;
+        this.userID = builder.userID;
         this.petName = builder.petName;
         this.firstMetDay = builder.firstMetDay;
         this.petImg = builder.petImg;
@@ -19,29 +26,21 @@ public class PetPlant{
 
     public static class Builder{
         private long pk = -1;
-        private int plantID;
+        private long plantID;
+        private long userID;
         private String petName;
-        private Date firstMetDay;
+        private LocalDate firstMetDay;
         private Byte[] petImg;
 
-        public Builder(int plantID, String petName, Date firstMetDay){
+        public Builder(long plantID, long userID, String petName, LocalDate firstMetDay){
             this.plantID = plantID;
+            this.userID = userID;
             this.petName = petName;
             this.firstMetDay = firstMetDay;
         }
 
         public Builder id(long pk){
             this.pk = pk;
-            return this;
-        }
-
-        public Builder petName(String petName){
-            this.petName = petName;
-            return this;
-        }
-
-        public Builder firstMetDay(Date firstMetDay){
-            this.firstMetDay = firstMetDay;
             return this;
         }
 
@@ -66,54 +65,8 @@ public class PetPlant{
         }
     }
 
-    public static Builder builder(int plantID, String petName, Date firstMetDay) {
-        return new Builder(plantID, petName, firstMetDay);
+    public static Builder builder(long plantID, long userID, String petName, LocalDate firstMetDay) {
+        return new Builder(plantID, userID, petName, firstMetDay);
     }
 
-    public long getPk() {
-        return pk;
-    }
-
-    public int getPlantID() {
-        return plantID;
-    }
-
-    public String getPetName() {
-        return petName;
-    }
-
-    public Date getFirstMetDay() {
-        return firstMetDay;
-    }
-
-    public Byte[] getPetImg() { return petImg; }
-    public void setPk(long pk) {
-        this.pk = pk;
-    }
-
-    public void setPlantID(int plantID) {
-        this.plantID = plantID;
-    }
-
-    public void setPetName(String petName) {
-        this.petName = petName;
-    }
-
-    public void setFirstMetDay(Date firstMetDay) {
-        this.firstMetDay = firstMetDay;
-    }
-
-    public void setPetImg(Byte[] petImg) {
-        this.petImg = petImg;
-    }
-
-    @Override
-    public String toString() {
-        return "PetPlant{" +
-                "pk=" + pk +
-                ", plantID=" + plantID +
-                ", petName='" + petName + '\'' +
-                ", firstMetDay=" + firstMetDay +
-                '}';
-    }
 }

@@ -9,6 +9,7 @@ import domain.repository.AccountRepository;
 import domain.repository.PetPlantRepository;
 import domain.repository.PlantRepository;
 import dto.AccountDTO;
+import infra.database.option.account.PKOption;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,10 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class NoticeAppService {
 
@@ -74,7 +72,7 @@ public class NoticeAppService {
 
             long accPk = accDTO.getPk();
 
-            Set<PetPlant> pets = petRepo.findByAccPk(accPk);
+            List<PetPlant> pets = petRepo.findByOption(new PKOption(accPk));
             Iterator iter = pets.iterator();
 
             if((temp_max - temp_min) >= 15 ){/*accPk, -1, "일교차가 심하니 식물들을 실내로 넣어주세요", new Date()*/
@@ -104,7 +102,7 @@ public class NoticeAppService {
 
                 pet = (PetPlant) iter.next();
                 plantID = pet.getPlantID();
-                plant = plantRepo.findByPk(plantID);
+                plant = plantRepo.findByID(plantID);
                 petGrowthTp = plant.getGrowthTp();
 
                 if(temp_max >= petGrowthTp){

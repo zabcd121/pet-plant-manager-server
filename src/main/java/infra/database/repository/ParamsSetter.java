@@ -5,6 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @FunctionalInterface
-public interface QueryMaker {
-    PreparedStatement make(Connection conn) throws SQLException;
+public interface ParamsSetter {
+    void setParams(PreparedStatement ps) throws SQLException;
 }
