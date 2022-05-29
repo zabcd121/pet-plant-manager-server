@@ -14,7 +14,7 @@ public class MainController {
     public MainController(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo) {
         accController = new AccountController(accRepo);
         plantController = new PlantController(plantRepo);
-        petPlantController = new PetPlantController(petPlantRepo);
+        petPlantController = new PetPlantController(petPlantRepo, accRepo);
     }
 
     public Response handle(Request req){

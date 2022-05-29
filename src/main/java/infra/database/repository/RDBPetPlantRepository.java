@@ -7,6 +7,9 @@ import dto.PetPlantDTO;
 import infra.database.option.Option;
 import infra.database.option.petPlant.PKOption;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +23,10 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
     private final static String PLANT_PK = "plant_PK";
     private final static String NAME = "name";
     private final static String FIRST_MET_DAY = "first_met_day";
+    private final static String IMAGE = "image";
 
     private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
-            PLANT_PK, NAME, FIRST_MET_DAY, USER_PK
+            PLANT_PK, NAME, FIRST_MET_DAY, USER_PK, IMAGE
     };
 
     @Override
@@ -55,6 +59,7 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
                     ps.setString(2, dto.getPetName());
                     ps.setDate(3, Date.valueOf(dto.getFirstMetDay()));
                     ps.setLong(4, dto.getUserID());
+                    ps.setBinaryStream(5, new ByteArrayInputStream(dto.getPetImg()));
                 }
         );
     }
@@ -67,7 +72,8 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
                     ps.setString(2, dto.getPetName());
                     ps.setDate(3, Date.valueOf(dto.getFirstMetDay()));
                     ps.setLong(4, dto.getUserID());
-                    ps.setLong(5, dto.getPk());
+                    ps.setBinaryStream(5, new ByteArrayInputStream(dto.getPetImg()));
+                    ps.setLong(6, dto.getPk());
                 }
         );
     }
@@ -89,12 +95,21 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
         PetPlant petPlant = null;
 
         while(rs.next()){
+            Blob blob = rs.getBlob(IMAGE);
+            byte[] imgBytes = new byte[(int) blob.length()];
+            try{
+                imgBytes = blob.getBinaryStream().readAllBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             petPlant = PetPlant.builder(
                     rs.getLong(PLANT_PK),
                     rs.getLong(USER_PK),
                     rs.getString(NAME),
                     rs.getDate(FIRST_MET_DAY).toLocalDate()
-            ).build();
+            ).petImg(imgBytes)
+            .build();
         }
 
         return petPlant;
@@ -105,12 +120,23 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
         List<PetPlant> list = new ArrayList<>();
 
         while(rs.next()){
+            Blob blob = rs.getBlob(IMAGE);
+            byte[] imgBytes = new byte[(int) blob.length()];
+            try{
+                imgBytes = blob.getBinaryStream().readAllBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             PetPlant petPlant = PetPlant.builder(
                     rs.getLong(PLANT_PK),
                     rs.getLong(USER_PK),
                     rs.getString(NAME),
                     rs.getDate(FIRST_MET_DAY).toLocalDate()
-            ).build();
+            ).petImg(imgBytes)
+            .build();
+
+            list.add(petPlant);
         }
 
         return list;

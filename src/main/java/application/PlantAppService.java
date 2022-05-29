@@ -2,6 +2,7 @@ package application;
 
 import domain.model.Plant;
 import domain.repository.PlantRepository;
+import domain.service.PlantRecommendService;
 import dto.ModelMapper;
 import dto.PlantDTO;
 
@@ -31,6 +32,21 @@ public class PlantAppService {
             return null;
         }else{
             return res;
+        }
+    }
+
+    public PlantDTO recommendPlant(PlantDTO dto){
+        PlantRecommendService plantRecommendService = new PlantRecommendService(plantRepo);
+
+        Plant recommendedPlant = plantRecommendService.recommend(
+                dto.getLightDemand(), dto.getHumidity(), dto.getGrowthTp(),
+                dto.getGrowthSpeed(), dto.getMngLevel(), dto.getClCode()
+        );
+
+        if(recommendedPlant==null){
+            return null;
+        }else{
+            return ModelMapper.<Plant,PlantDTO>modelToDTO(recommendedPlant, PlantDTO.class);
         }
     }
 }

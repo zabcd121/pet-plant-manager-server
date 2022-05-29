@@ -51,6 +51,10 @@ public class Account {
         token = builder.token;
     }
 
+    public long getPk() {
+        return pk;
+    }
+
     public boolean checkPassword(String pw){
         return password.equals(pw);
     }

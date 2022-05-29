@@ -7,6 +7,9 @@ import dto.PlantDTO;
 import infra.database.option.Option;
 import infra.database.option.plant.PKOption;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,10 +25,11 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
     private final static String MANAGE_LEVEL = "manage_level";
     private final static String LIGHT_DEMAND = "light_demand";
     private final static String CLASS_CODE = "class_code";
+    private final static String IMAGE = "image";
 
     private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
             NAME, HUMIDITY, GROWTH_TMP, GROWTH_SPEED,
-            MANAGE_LEVEL, LIGHT_DEMAND, CLASS_CODE
+            MANAGE_LEVEL, LIGHT_DEMAND, CLASS_CODE, IMAGE
     };
 
 
@@ -62,6 +66,7 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     ps.setInt(5, dto.getMngLevel());
                     ps.setFloat(6, dto.getLightDemand());
                     ps.setFloat(7, dto.getClCode());
+                    ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
                 }
         );
     }
@@ -77,7 +82,8 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     ps.setInt(5, dto.getMngLevel());
                     ps.setFloat(6, dto.getLightDemand());
                     ps.setFloat(7, dto.getClCode());
-                    ps.setLong(8, dto.getPk());
+                    ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
+                    ps.setLong(9, dto.getPk());
                 }
         );
     }
@@ -99,6 +105,14 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
         Plant plant = null;
 
         while(rs.next()){
+            Blob blob = rs.getBlob(IMAGE);
+            byte[] imgBytes = new byte[(int) blob.length()];
+            try{
+                imgBytes = blob.getBinaryStream().readAllBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             plant = Plant.builder()
                     .pk(rs.getLong(PLANT_PK))
                     .pltName(rs.getString(NAME))
@@ -108,6 +122,7 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     .mngLevel(rs.getInt(MANAGE_LEVEL))
                     .lightDemand(rs.getFloat(LIGHT_DEMAND))
                     .clCode(rs.getFloat(CLASS_CODE))
+                    .imgBytes(imgBytes)
                     .build();
         }
 
@@ -119,6 +134,14 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
         List<Plant> list = new ArrayList<>();
 
         while(rs.next()){
+            Blob blob = rs.getBlob(IMAGE);
+            byte[] imgBytes = new byte[(int) blob.length()];
+            try{
+                imgBytes = blob.getBinaryStream().readAllBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             Plant plant = Plant.builder()
                     .pk(rs.getLong(PLANT_PK))
                     .pltName(rs.getString(NAME))
@@ -128,6 +151,7 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     .mngLevel(rs.getInt(MANAGE_LEVEL))
                     .lightDemand(rs.getFloat(LIGHT_DEMAND))
                     .clCode(rs.getFloat(CLASS_CODE))
+                    .imgBytes(imgBytes)
                     .build();
 
             list.add(plant);

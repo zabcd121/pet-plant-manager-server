@@ -22,6 +22,9 @@ public class PlantController {
             case "all":{
                 return processAll(req);
             }
+            case "recommend":{
+                return processRecommend(req);
+            }
         }
 
         return null;
@@ -46,4 +49,25 @@ public class PlantController {
 
         return res;
     }
+
+    private Response processRecommend(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case GET:{
+                PlantDTO data = plantAppService.recommendPlant((PlantDTO) req.data.get("plantDTO"));
+
+                if(data==null){
+                    res = new Response(Response.StatusCode.FAIL);
+                }else{
+                    res = new Response(Response.StatusCode.SUCCESS);
+                }
+
+                res.data.put("plantDTO", data);
+            }
+        }
+
+        return res;
+    }
+
 }

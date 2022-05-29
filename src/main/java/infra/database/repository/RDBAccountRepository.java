@@ -88,20 +88,18 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
 
     @Override
     protected Account restoreObject(ResultSet rs) throws SQLException {
-        long pk = 0;
-        String id = "";
-        String password = "";
-        String token = "";
+        Account acc = null;
 
         while(rs.next()){
-            pk = rs.getLong(ACCOUNT_PK);
-            id = rs.getString(ACCOUNT_ID);
-            password = rs.getString(ACCOUNT_PW);
-            token = rs.getString(TOKEN);
+            acc = Account.builder(
+                    rs.getString(ACCOUNT_ID),
+                    rs.getString(ACCOUNT_PW)
+            ).pk(rs.getLong(ACCOUNT_PK))
+                    .token(rs.getString(TOKEN)).build();
         }
 
 
-        return Account.builder(id, password).pk(pk).token(token).build();
+        return acc;
     }
 
     @Override
