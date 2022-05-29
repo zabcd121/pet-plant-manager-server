@@ -22,6 +22,7 @@ public class Plant {
     private int growthSpeed;         // 성장 속도
     private int mngLevel;            // 관리 수준
     private float clCode;              // 분류 코드(ex: 잎보기 식물)
+    private byte[] imgBytes;
 
     public long getPk() {
         return pk;

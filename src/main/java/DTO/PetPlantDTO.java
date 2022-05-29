@@ -16,5 +16,5 @@ public class PetPlantDTO implements Serializable {
     private long userID;
     private String petName;
     private LocalDate firstMetDay;
-    private Byte[] petImg;
+    private byte[] petImg;
 }

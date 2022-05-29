@@ -11,7 +11,7 @@ public class PetPlant{
     private long userID;
     private String petName;
     private LocalDate firstMetDay;
-    private Byte[] petImg;
+    private byte[] petImg;
 
     private PetPlant(Builder builder){
         this.pk = builder.pk;
@@ -28,7 +28,7 @@ public class PetPlant{
         private long userID;
         private String petName;
         private LocalDate firstMetDay;
-        private Byte[] petImg;
+        private byte[] petImg;
 
         public Builder(long plantID, long userID, String petName, LocalDate firstMetDay){
             this.plantID = plantID;
@@ -42,7 +42,7 @@ public class PetPlant{
             return this;
         }
 
-        public Builder petImg(Byte[] petImg){
+        public Builder petImg(byte[] petImg){
             this.petImg = petImg;
             return this;
         }
@@ -65,5 +65,13 @@ public class PetPlant{
 
     public static Builder builder(long plantID, long userID, String petName, LocalDate firstMetDay) {
         return new Builder(plantID, userID, petName, firstMetDay);
+    }
+
+    public void setPetName(String petName) {
+        this.petName = petName;
+    }
+
+    public boolean checkOwner(long ownerID){
+        return userID==ownerID;
     }
 }
