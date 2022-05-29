@@ -1,14 +1,12 @@
 package domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Plant {
     private long pk;
     private String pltName;             // 식물 이름
