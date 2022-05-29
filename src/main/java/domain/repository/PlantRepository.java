@@ -2,7 +2,6 @@ package domain.repository;
 
 import domain.model.Plant;
 import infra.database.option.Option;
-
 import java.util.List;
 
 public interface PlantRepository {

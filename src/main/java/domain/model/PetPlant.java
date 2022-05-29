@@ -1,10 +1,12 @@
 package domain.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor
+@Getter
 public class PetPlant{
     private long pk;
     private long plantID;
@@ -66,4 +68,5 @@ public class PetPlant{
     public static Builder builder(long plantID, long userID, String petName, LocalDate firstMetDay) {
         return new Builder(plantID, userID, petName, firstMetDay);
     }
+
 }
