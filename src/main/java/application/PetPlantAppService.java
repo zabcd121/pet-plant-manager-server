@@ -11,7 +11,7 @@ public class PetPlantAppService {
         this.petPlantRepo = petPlantRepo;
     }
 
-    public PetPlantDTO createPetPlant(PetPlantDTO dto){
+    public PetPlantDTO createPetPlant(PetPlantDTO dto) throws IllegalArgumentException{
         PetPlantManageSystem petPlantManageSystem = new PetPlantManageSystem(petPlantRepo);
 
         long petPlantID = petPlantManageSystem.create(

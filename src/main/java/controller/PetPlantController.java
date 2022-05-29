@@ -2,6 +2,8 @@ package controller;
 
 import application.PetPlantAppService;
 import domain.repository.PetPlantRepository;
+import dto.MessageDTO;
+import dto.PetPlantDTO;
 import infra.network.Request;
 import infra.network.Response;
 
@@ -16,10 +18,8 @@ public class PetPlantController {
         String secondLevel = URLParser.parseURLByLevel(req.url, 2);
 
         switch(secondLevel){
-            case "create":{
-                return processCreate(req);
-            }
-            case "all":{
+            case "mypetplant":{
+                return processPetplant(req);
             }
             case "update":{
             }
@@ -30,11 +30,34 @@ public class PetPlantController {
         return null;
     }
 
-    private Response processCreate(Request req) {
+    private Response processPetplant(Request req) {
         Response res = null;
 
         switch (req.method){
             case POST :{
+                String errorMsg = null;
+                PetPlantDTO petPlantDTO = null;
+
+                try{
+                    petPlantDTO = petPlantAppService.createPetPlant((PetPlantDTO) req.data.get("petPlantDTO"));
+                }catch(IllegalArgumentException e){
+                    errorMsg = e.getMessage();
+                }finally {
+                    if(petPlantDTO==null){
+                        res = new Response(Response.StatusCode.FAIL);
+                        res.data.put("messageDTO", new MessageDTO(errorMsg));
+                    }else{
+                        res = new Response(Response.StatusCode.SUCCESS);
+                    }
+
+                }
+
+
+                res.data.put("petPlantDTO", petPlantDTO);
+            }
+
+            case GET:{
+
             }
         }
 

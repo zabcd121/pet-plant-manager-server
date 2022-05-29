@@ -111,6 +111,8 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
                     rs.getString(NAME),
                     rs.getDate(FIRST_MET_DAY).toLocalDate()
             ).build();
+
+            list.add(petPlant);
         }
 
         return list;

@@ -34,6 +34,7 @@ public class SQLMaker {
         }
         sql.append(") ");
 
+        System.out.println("sql = " + sql);
         return sql.toString();
     }
 

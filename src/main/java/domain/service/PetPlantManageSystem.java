@@ -2,6 +2,8 @@ package domain.service;
 
 import domain.model.PetPlant;
 import domain.repository.PetPlantRepository;
+import infra.database.option.petPlant.NameOption;
+import infra.database.option.petPlant.UserPKOption;
 
 import java.time.LocalDate;
 
@@ -14,7 +16,7 @@ public class PetPlantManageSystem {
 
     public long create(long plantId, long userId, String petName, LocalDate firstMetDay /*, Byte[] petImg */){
         //현재 사용자의 반려식물 중에 중복되는 이름이 있을 경우 생성 불가
-        if(isExisitingPetName(petName)){
+        if(isExisitingPetName(userId, petName)){
             throw new IllegalArgumentException("중복되는 반려식물 이름입니다.");
         }
 
@@ -35,10 +37,13 @@ public class PetPlantManageSystem {
     }
 
 
-    private boolean isExisitingPetName(String petName){
-//        if(petPlantRepo.findBy(petName) == null){
-//            return false;
-//        }
+    private boolean isExisitingPetName(long userID, String petName){
+        if(petPlantRepo.findByOption(
+                new UserPKOption(userID),
+                new NameOption(petName)
+        ).size()==0){
+            return false;
+        }
 
         return true;
     }
