@@ -4,6 +4,7 @@ import domain.model.PetPlant;
 import dto.ModelMapper;
 import dto.PetPlantDTO;
 import infra.database.repository.RDBAccountRepository;
+import infra.database.repository.RDBNoticeRepository;
 import infra.database.repository.RDBPetPlantRepository;
 import infra.database.repository.RDBPlantRepository;
 
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 
 public class Test {
     public static void main(String[] args) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository());
+        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBNoticeRepository());
         l.run();
 
 //        RDBPetPlantRepository p = new RDBPetPlantRepository();
