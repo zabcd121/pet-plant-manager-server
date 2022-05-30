@@ -1,4 +1,4 @@
-package domain.model;
+package dto;
 
 import lombok.*;
 
@@ -10,8 +10,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class Post {
+public class PostDTO {
+
     private long pk;
     private String petPk;
     private String title;

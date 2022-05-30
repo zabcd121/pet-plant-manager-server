@@ -8,7 +8,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @ToString
 public class Notice {
     long targetAccId;
