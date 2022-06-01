@@ -64,7 +64,7 @@ public class DiaryController {
             case GET:{
                 List<DiaryDTO> resData = null;
 
-                resData = diaryAppService.retrieveAll(req.token);
+                resData = diaryAppService.retrieveAll((AccountDTO) req.data.get("accountDTO"));
 
                 if(resData.size()==0){
                     res = new Response(Response.StatusCode.FAIL);

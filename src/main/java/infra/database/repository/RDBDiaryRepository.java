@@ -130,14 +130,16 @@ public class RDBDiaryRepository extends AbstractRepository<Diary> implements Dia
         @Override
         protected List<Diary> restoreList(ResultSet rs) throws SQLException {
             List<Diary> list = new ArrayList<>();
-            Blob blob = rs.getBlob(DIARY_IMG);
-            byte[] imgBytes = new byte[(int) blob.length()];
-            try{
-                imgBytes = blob.getBinaryStream().readAllBytes();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
             while(rs.next()){
+                Blob blob = rs.getBlob(DIARY_IMG);
+                byte[] imgBytes = new byte[(int) blob.length()];
+                try{
+                    imgBytes = blob.getBinaryStream().readAllBytes();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 Diary diary = Diary.builder()
                         .pk(rs.getLong(DIARY_PK))
                         .userPK(rs.getLong(USER_PK))
