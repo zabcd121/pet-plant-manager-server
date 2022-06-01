@@ -1,13 +1,18 @@
 package application;
 
 import domain.model.Diary;
+import domain.model.Watering;
 import domain.repository.DiaryRepository;
 import dto.AccountDTO;
 import dto.ModelMapper;
 import dto.DiaryDTO;
+import dto.WateringDTO;
 import infra.database.option.account.TokenOption;
+import infra.database.option.diary.PetPlantPKOption;
 import infra.database.option.diary.UserPKOption;
+import infra.database.option.watering.MonthDateOption;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +71,23 @@ public class DiaryAppService {
         }
 
         return diaryDTOList;
+    }
+
+    public List<DiaryDTO> retrieveByMonthAndPetPK(DiaryDTO diaryDTO){
+        List<Diary> diaryList = diaryRepo.findByOption(
+                new infra.database.option.diary.UserPKOption(diaryDTO.getUserPK()),
+                new PetPlantPKOption(diaryDTO.getPetPlantPK()),
+                new infra.database.option.diary.MonthDateOption(diaryDTO.getDate())
+        );
+        List<DiaryDTO> resList = new ArrayList<>();
+
+        for(Diary diary : diaryList){
+            resList.add(
+                    ModelMapper.<Diary, DiaryDTO>modelToDTO(diary, DiaryDTO.class)
+            );
+        }
+
+        return resList;
     }
 
     public DiaryDTO update(DiaryDTO diaryDTO){
