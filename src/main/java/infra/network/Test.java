@@ -1,19 +1,22 @@
 package infra.network;
 
-import infra.database.repository.RDBAccountRepository;
-import infra.database.repository.RDBNoticeRepository;
-import infra.database.repository.RDBPetPlantRepository;
-import infra.database.repository.RDBPlantRepository;
-import infra.database.repository.RDBWateringRepository;
+import domain.model.Diary;
+import infra.database.repository.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 
 public class Test {
     public static void main(String[] args) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository() );
+//        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
+//
+//        l.run();
 
-        l.run();
+        RDBDiaryRepository p = new RDBDiaryRepository();
+        Diary diary = Diary.builder().pk(0).userPK(1).petPlantPK(27).title("제목1").content("내용1").diaryImg(new byte[3]).date(LocalDate.now()).build();
+        Diary diary1 = p.findByID(4);
+        System.out.println(diary1.toString());
 
 //        RDBPetPlantRepository p = new RDBPetPlantRepository();
 //

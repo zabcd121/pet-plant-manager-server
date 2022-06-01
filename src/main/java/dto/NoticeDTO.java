@@ -10,10 +10,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class NoticeDTO {
-    long pk;
-    long targetAccId;
-    long targetPetId;
-    String content;
-    LocalDate noticedTime;
+    private long pk;
+    private long targetAccId;
+    private long targetPetId;
+    private String targetPetName;
+    private String content;
+    private LocalDate noticedTime;
 
 }

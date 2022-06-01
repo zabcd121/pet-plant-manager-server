@@ -5,27 +5,29 @@ import domain.repository.DiaryRepository;
 import dto.ModelMapper;
 import dto.DiaryDTO;
 import infra.database.option.Option;
-import infra.database.option.post.PKOption;
+import infra.database.option.diary.PKOption;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RDBADiaryRepository extends AbstractRepository<Diary> implements DiaryRepository {
+public class RDBDiaryRepository extends AbstractRepository<Diary> implements DiaryRepository {
 
-        private final static String TABLE_NAME = "posts";
-        private final static String POST_PK = "post_PK";
-        private final static String PET_PK = "pet_PK";
+        private final static String TABLE_NAME = "diaries";
+        private final static String DIARY_PK = "diary_PK";
+        private final static String PET_PK = "pet_plant_PK";
+        private final static String USER_PK = "user_PK";
         private final static String TITLE = "title";
         private final static String CONTENT = "content";
-        private final static String POSTED_DATE = "posted_date";
-        private final static String PHOTO = "photo";
+        private final static String DATE = "date";
+        private final static String DIARY_IMG = "diary_img";
 
         private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
-                TITLE, CONTENT, PHOTO
+                USER_PK, PET_PK, TITLE, CONTENT, DATE, DIARY_IMG
         };
 
         private long add(DiaryDTO dto) {
@@ -34,11 +36,12 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
                             TABLE_NAME, INSERT_OR_UPDATE_COLUMN_NAMES
                     ),
                     ps -> {
-                        ps.setLong(1, dto.getPetPk());
-                        ps.setString(2, dto.getTitle());
-                        ps.setString(3, dto.getContent());
-                        ps.setDate(4, Date.valueOf(dto.getPostedDate()));
-                        ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
+                        ps.setLong(1, dto.getUserPK());
+                        ps.setLong(2, dto.getPetPlantPK());
+                        ps.setString(3, dto.getTitle());
+                        ps.setString(4, dto.getContent());
+                        ps.setDate(5, Date.valueOf(dto.getDate()));
+                        ps.setBinaryStream(6, new ByteArrayInputStream(dto.getDiaryImg()));
                     }
             );
         }
@@ -46,14 +49,15 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
         private void update(DiaryDTO dto) {
             executeUpdateOrDelete(
                     SQLMaker.makeUpdateSql(
-                            TABLE_NAME, POST_PK, INSERT_OR_UPDATE_COLUMN_NAMES
+                            TABLE_NAME, DIARY_PK, INSERT_OR_UPDATE_COLUMN_NAMES
                     ),
                     ps -> {
-                        ps.setLong(1, dto.getPetPk());
-                        ps.setString(2, dto.getTitle());
-                        ps.setString(3, dto.getContent());
-                        ps.setDate(4, Date.valueOf(dto.getPostedDate()));
-                        ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
+                        ps.setLong(1, dto.getUserPK());
+                        ps.setLong(2, dto.getPetPlantPK());
+                        ps.setString(3, dto.getTitle());
+                        ps.setString(4, dto.getContent());
+                        ps.setDate(5, Date.valueOf(dto.getDate()));
+                        ps.setBinaryStream(6, new ByteArrayInputStream(dto.getDiaryImg()));
                     }
             );
         }
@@ -86,7 +90,7 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
 
             executeUpdateOrDelete(
                     SQLMaker.makeDeleteSql(
-                            TABLE_NAME, POST_PK
+                            TABLE_NAME, DIARY_PK
                     ),
                     ps -> {
                         ps.setLong(1, dto.getPk());
@@ -100,7 +104,7 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
             Diary diary = null;
 
             while(rs.next()){
-                Blob blob = rs.getBlob(PHOTO);
+                Blob blob = rs.getBlob(DIARY_IMG);
                 byte[] imgBytes = new byte[(int) blob.length()];
                 try{
                     imgBytes = blob.getBinaryStream().readAllBytes();
@@ -109,12 +113,13 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
                 }
 
                 diary = Diary.builder()
-                        .pk(rs.getLong(POST_PK))
-                        .petPk(rs.getLong(PET_PK))
+                        .pk(rs.getLong(DIARY_PK))
+                        .userPK(rs.getLong(USER_PK))
+                        .petPlantPK(rs.getLong(PET_PK))
                         .title(rs.getString(TITLE))
                         .content(rs.getString(CONTENT))
-                        .postedDate(rs.getDate(POSTED_DATE).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                        .imgBytes(imgBytes)
+                        .date(rs.getDate(DATE).toLocalDate())
+                        .diaryImg(imgBytes)
                         .build();
             }
 
@@ -125,7 +130,7 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
         @Override
         protected List<Diary> restoreList(ResultSet rs) throws SQLException {
             List<Diary> list = new ArrayList<>();
-            Blob blob = rs.getBlob(PHOTO);
+            Blob blob = rs.getBlob(DIARY_IMG);
             byte[] imgBytes = new byte[(int) blob.length()];
             try{
                 imgBytes = blob.getBinaryStream().readAllBytes();
@@ -134,12 +139,13 @@ public class RDBADiaryRepository extends AbstractRepository<Diary> implements Di
             }
             while(rs.next()){
                 Diary diary = Diary.builder()
-                        .pk(rs.getLong(POST_PK))
-                        .petPk(rs.getLong(PET_PK))
+                        .pk(rs.getLong(DIARY_PK))
+                        .userPK(rs.getLong(USER_PK))
+                        .petPlantPK(rs.getLong(PET_PK))
                         .title(rs.getString(TITLE))
                         .content(rs.getString(CONTENT))
-                        .postedDate(rs.getDate(POSTED_DATE).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-                        .imgBytes(imgBytes)
+                        .date(rs.getDate(DATE).toLocalDate())
+                        .diaryImg(imgBytes)
                         .build();
 
                 list.add(diary);
