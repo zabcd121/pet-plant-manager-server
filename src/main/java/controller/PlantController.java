@@ -25,6 +25,9 @@ public class PlantController {
             case "recommend":{
                 return processRecommend(req);
             }
+            case "one":{
+                return processOne(req);
+            }
         }
 
         return null;
@@ -64,6 +67,26 @@ public class PlantController {
                 }
 
                 res.data.put("plantDTOList", data);
+            }
+        }
+
+        return res;
+    }
+
+    private Response processOne(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case GET :{
+                PlantDTO dto = plantAppService.retrieveByID((PlantDTO) req.data.get("plantDTO"));
+
+                if(dto==null){
+                    res = new Response(Response.StatusCode.FAIL);
+                }else{
+                    res = new Response(Response.StatusCode.SUCCESS);
+                    res.data.put("plantDTO", dto);
+                }
+                break;
             }
         }
 
