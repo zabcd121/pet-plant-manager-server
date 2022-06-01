@@ -2,8 +2,7 @@ package domain.model;
 
 import lombok.*;
 
-import java.io.File;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
@@ -13,9 +12,9 @@ import java.util.Date;
 @ToString
 public class Post {
     private long pk;
-    private String petPk;
+    private long petPk;
     private String title;
     private String content;
-    private Date postedTime;
-    private File photo;
+    private LocalDate postedDate;
+    private byte[] imgBytes;
 }

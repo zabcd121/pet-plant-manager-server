@@ -1,12 +1,19 @@
 package application;
 
+import domain.model.Notice;
+import domain.model.PetPlant;
 import domain.model.Post;
 import domain.repository.PostRepository;
+import domain.service.PetPlantManageSystem;
 import dto.AccountDTO;
+import dto.ModelMapper;
+import dto.NoticeDTO;
 import dto.PostDTO;
 import infra.database.option.account.PKOption;
+import infra.database.option.account.TokenOption;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,17 +25,24 @@ public class PostAppService {
         this.postRepo = postRepo;
     }
 
-    public void createPost(PostDTO postDTO){
+    public PostDTO createPost(PostDTO postDTO){
         Post post = Post.builder()
-                            .pk(postDTO.getPk())
                             .petPk(postDTO.getPetPk())
                             .title(postDTO.getTitle())
                             .content(postDTO.getContent())
-                            .postedTime(postDTO.getPostedTime())
-                            .photo(postDTO.getPhoto())
+                            .postedDate(postDTO.getPostedDate())
+                            .imgBytes(postDTO.getImgBytes())
                             .build();
 
-        postRepo.save(post);
+        long postPK = postRepo.save(post);
+
+        postDTO.setPk(postPK);
+
+        if(postPK>0){
+            return postDTO;
+        }else{
+            return null;
+        }
     }
 
     public void delete(PostDTO postDTO){
@@ -36,28 +50,42 @@ public class PostAppService {
         postRepo.remove(post);
     }
 
-    public List<Post> retrieveAll(AccountDTO accDTO){
-        List<Post> posts = postRepo.findByOption(new PKOption(accDTO.getPk()));
+    public List<PostDTO> retrieveAll(String token){
+        List<Post> posts = postRepo.findByOption(new TokenOption(token));
+        List<PostDTO> postDTOList = new ArrayList<>();
 
-        return posts;
+        for(Post p : posts){
+            postRepo.save(p);
+            postDTOList.add(ModelMapper.modelToDTO(p, PostDTO.class));
+        }
+
+        return postDTOList;
     }
 
-    public Post retrieve(long id){
-        Post post = postRepo.findByID(id);
+    public List<PostDTO> retrieve(long petPK){
+        List<Post> posts = postRepo.findByOption(new infra.database.option.petPlant.PKOption(petPK));
+        List<PostDTO> postDTOList = new ArrayList<>();
 
-        return post;
+        for(Post p : posts){
+            postRepo.save(p);
+            postDTOList.add(ModelMapper.modelToDTO(p, PostDTO.class));
+        }
+
+        return postDTOList;
     }
 
-    public void update(PostDTO postDTO){
+    public PostDTO update(PostDTO postDTO){
         Post post = postRepo.findByID(postDTO.getPk());
 
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
-        post.setPhoto(postDTO.getPhoto());
+        post.setImgBytes(postDTO.getImgBytes());
         post.setPetPk(postDTO.getPetPk());
-        post.setPostedTime(postDTO.getPostedTime());
+        post.setPostedDate(postDTO.getPostedDate());
 
         postRepo.save(post);
+
+        return ModelMapper.modelToDTO(post, PostDTO.class);
     }
 
 }

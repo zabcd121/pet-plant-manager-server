@@ -1,6 +1,7 @@
 package infra.network;
 
 import domain.repository.AccountRepository;
+import domain.repository.NoticeRepository;
 import domain.repository.PetPlantRepository;
 import domain.repository.PlantRepository;
 import domain.repository.WateringRepository;
@@ -14,13 +15,15 @@ public class Listener {
     private final AccountRepository accRepo;
     private final PlantRepository plantRepo;
     private final PetPlantRepository petPlantRepo;
+    private final NoticeRepository noticeRepo;
     private final WateringRepository wateringRepo;
 
-    public Listener(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, WateringRepository wateringRepo){
+    public Listener(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, WateringRepository wateringRepo, NoticeRepository noticeRepo){
         this.accRepo = accRepo;
         this.plantRepo = plantRepo;
         this.petPlantRepo = petPlantRepo;
         this.wateringRepo = wateringRepo;
+        this.noticeRepo = noticeRepo;
 
         try{
             serverSocket = new ServerSocket(3000);
@@ -56,7 +59,8 @@ public class Listener {
         // 최대 스레드 개수를 넘지 않을 때만
         if (clientCount < clients.length) {
             clientCount++;
-            Server thread = new Server(socket, clientCount, accRepo, plantRepo, petPlantRepo, wateringRepo);
+            Server thread = new Server(socket, clientCount, accRepo, plantRepo, petPlantRepo, noticeRepo, wateringRepo);
+
             clients[clientCount] = thread;     // 스레드 배열에 생성한 스레드 추가
             System.out.println("Create thread : clientCount = " + clientCount);
             System.out.println("client Port : " + thread.getClientID());

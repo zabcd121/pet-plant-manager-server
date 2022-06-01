@@ -1,6 +1,7 @@
 package infra.network;
 
 import infra.database.repository.RDBAccountRepository;
+import infra.database.repository.RDBNoticeRepository;
 import infra.database.repository.RDBPetPlantRepository;
 import infra.database.repository.RDBPlantRepository;
 import infra.database.repository.RDBWateringRepository;
@@ -9,7 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Test {
     public static void main(String[] args) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository());
+
+        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository() );
+
         l.run();
 
 //        RDBPetPlantRepository p = new RDBPetPlantRepository();

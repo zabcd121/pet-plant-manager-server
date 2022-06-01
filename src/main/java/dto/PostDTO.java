@@ -2,8 +2,8 @@ package dto;
 
 import lombok.*;
 
-import java.io.File;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Builder
 @AllArgsConstructor
@@ -13,9 +13,11 @@ import java.util.Date;
 public class PostDTO {
 
     private long pk;
-    private String petPk;
+    private long petPk;
     private String title;
     private String content;
-    private Date postedTime;
-    private File photo;
+    private LocalDate postedDate;
+
+    @Builder.Default
+    private byte[] imgBytes = new byte[0];
 }

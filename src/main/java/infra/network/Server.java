@@ -2,6 +2,7 @@ package infra.network;
 
 import controller.MainController;
 import domain.repository.AccountRepository;
+import domain.repository.NoticeRepository;
 import domain.repository.PetPlantRepository;
 import domain.repository.PlantRepository;
 import domain.repository.WateringRepository;
@@ -17,10 +18,11 @@ public class Server extends Thread {
     private int threadID;
     private boolean running;
 
-    public Server(Socket socket, int id, AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, WateringRepository wateringRepo) {
+    public Server(Socket socket, int id, AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, NoticeRepository noticeRepo, WateringRepository wateringRepo) {
         soc = socket;
         threadID = id;
-        mainController = new MainController(accRepo, plantRepo, petPlantRepo, wateringRepo);
+        mainController = new MainController(accRepo, plantRepo, petPlantRepo, noticeRepo, wateringRepo);
+
         try{
             is = new ObjectInputStream(
                     soc.getInputStream()
@@ -32,6 +34,7 @@ public class Server extends Thread {
             e.printStackTrace();
             exit();
         }
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-package domain.model;
+package dto;
 
 import lombok.*;
 
@@ -7,11 +7,11 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Notice {
+@Getter
+@Setter
+public class NoticeDTO {
     long pk;
     long targetAccId;
-
     long targetPetId;
     String content;
     LocalDate noticedTime;
