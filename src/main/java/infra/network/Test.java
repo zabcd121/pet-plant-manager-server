@@ -7,6 +7,7 @@ import domain.repository.AccountRepository;
 import domain.repository.NoticeRepository;
 import domain.repository.PlantRepository;
 import dto.DiaryDTO;
+
 import dto.WateringDTO;
 import infra.database.repository.RDBAccountRepository;
 import infra.database.repository.RDBPetPlantRepository;
@@ -18,6 +19,8 @@ import domain.model.Diary;
 import domain.model.Notice;
 import infra.database.option.diary.UserPKOption;
 import infra.database.repository.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,8 +33,8 @@ import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
-//        l.run();
+        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
+        l.run();
 
         System.out.println(LocalDate.now().getMonth().getValue());
 
@@ -43,6 +46,7 @@ public class Test {
 //        RDBDiaryRepository p = new RDBDiaryRepository();
 //
 //        p.remove(Diary.builder().pk(5).build());
+
 //        p.save(diary);
 //        DiaryAppService diaryAppService = new DiaryAppService(new RDBDiaryRepository());
 //
@@ -181,7 +185,7 @@ public class Test {
 //        }
 
 //        RDBPlantRepository r = new RDBPlantRepository();
-//        try(FileInputStream fis = new FileInputStream(new File("./purified.json"))) {
+//        try(FileInputStream fis = new FileInputStream(new File("./water_data.json"))) {
 //            String str = new String(fis.readAllBytes());
 //            JSONArray jsonArray = new JSONArray(str);
 //
@@ -197,7 +201,11 @@ public class Test {
 //                                .growthTp(obj.getInt("grwhTpCode"))
 //                                .growthSpeed(obj.getInt("grwtveCode"))
 //                                .mngLevel(obj.getInt("managelevelCode"))
-//                                .clCode(obj.getFloat("clCode"))
+//                                .clCode(obj.getString("clCode"))
+//                                .waterSpring(obj.getInt("waterSpring"))
+//                                .waterSummer(obj.getInt("waterSummer"))
+//                                .waterAutumn(obj.getInt("waterAutumn"))
+//                                .waterWinter(obj.getInt("waterWinter"))
 //                                .imgBytes(imgFile.readAllBytes())
 //                                .build();
 //

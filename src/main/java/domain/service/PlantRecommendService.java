@@ -43,7 +43,7 @@ public class PlantRecommendService {
     }
 
     public List<Plant> recommend(float lightDemand, int humidity, int growthTp,
-                           int growthSpeed, int mngLevel, float clCode) {
+                           int growthSpeed, int mngLevel, String classCode, int waterCycle) {
 
         List<Plant> plantList = plantRepo.findByOption();
         PriorityQueue<Entry> topS = new PriorityQueue<>(Collections.reverseOrder());
@@ -52,7 +52,7 @@ public class PlantRecommendService {
         for(Plant plant : plantList){
             double similarity = plant.calculateSimilarity(
                     lightDemand, humidity, growthTp,
-                    growthSpeed, mngLevel, clCode
+                    growthSpeed, mngLevel, classCode, waterCycle
             );
 
             topS.add(new Entry(plant, similarity));

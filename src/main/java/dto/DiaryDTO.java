@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DiaryDTO implements Serializable {
+public class DiaryDTO implements Serializable, Comparable<DiaryDTO>  {
 
     private long pk;
     private long petPlantPK;
@@ -20,4 +20,12 @@ public class DiaryDTO implements Serializable {
 
     @Builder.Default
     private byte[] diaryImg = new byte[0];
+
+    @Override
+    public int compareTo(DiaryDTO dto) {
+        if(date.isAfter(dto.getDate())) return 1;
+        else if(date.isEqual(dto.getDate())) return 0;
+        else return -1;
+
+    }
 }

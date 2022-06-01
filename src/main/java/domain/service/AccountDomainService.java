@@ -40,14 +40,15 @@ public class AccountDomainService {
         }
     }
 
-    public boolean signUp(String id, String pwd){
+    public boolean signUp(String id, String pwd, String address, double x, double y){
         if(accRepo.findByOption(new IDOption(id)).size()>0){
             return false;
         }
 
         String token = UUID.randomUUID().toString();
 
-        Account newAcc = Account.builder(id, pwd).token(token).build();
+        Account newAcc = Account.builder(id, pwd).
+                token(token).address(address).x(x).y(y).build();
 
         long accPk = accRepo.save(newAcc);
 

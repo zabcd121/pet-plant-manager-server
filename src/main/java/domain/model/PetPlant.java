@@ -76,4 +76,8 @@ public class PetPlant{
     public boolean checkOwner(long ownerID){
         return userID==ownerID;
     }
+
+    public void setPetImg(byte[] petImg) {
+        this.petImg = petImg;
+    }
 }
