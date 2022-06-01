@@ -1,7 +1,11 @@
 package infra.network;
 
 import application.DiaryAppService;
+import application.NoticeAppService;
 import application.PetPlantAppService;
+import domain.repository.AccountRepository;
+import domain.repository.NoticeRepository;
+import domain.repository.PlantRepository;
 import dto.DiaryDTO;
 import dto.WateringDTO;
 import infra.database.repository.RDBAccountRepository;
@@ -29,10 +33,13 @@ public class Test {
 //        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
 //        l.run();
 
+        System.out.println(LocalDate.now().getMonth().getValue());
+
 //        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
 //
 //        l.run();
-
+//        NoticeAppService n = new NoticeAppService(new RDBAccountRepository(), new RDBPetPlantRepository(), new RDBPlantRepository(), new RDBNoticeRepository());
+//        n.deleteNotice();
 //        RDBDiaryRepository p = new RDBDiaryRepository();
 //
 //        p.remove(Diary.builder().pk(5).build());
