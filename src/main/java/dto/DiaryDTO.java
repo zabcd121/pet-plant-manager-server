@@ -2,13 +2,14 @@ package dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class DiaryDTO {
+public class DiaryDTO implements Serializable {
 
     private long pk;
     private long petPlantPK;

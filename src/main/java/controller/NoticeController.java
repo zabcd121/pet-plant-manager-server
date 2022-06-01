@@ -61,8 +61,8 @@ public class NoticeController {
 
                 }
 
-
                 res.data.put("noticeDTOList", noticeDTOList);
+                break;
             }
 
             case GET:{
@@ -77,6 +77,7 @@ public class NoticeController {
                 }
 
                 res.data.put("noticeDTOList", resData);
+                break;
             }
         }
 
@@ -97,6 +98,7 @@ public class NoticeController {
                     res = new Response(Response.StatusCode.FAIL);
                     res.data.put("messageDTO", errorMsg);
                 }
+                break;
             }
         }
 

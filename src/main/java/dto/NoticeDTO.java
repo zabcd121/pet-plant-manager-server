@@ -2,6 +2,7 @@ package dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Builder
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NoticeDTO {
+public class NoticeDTO implements Serializable {
     private long pk;
     private long targetAccId;
     private long targetPetId;

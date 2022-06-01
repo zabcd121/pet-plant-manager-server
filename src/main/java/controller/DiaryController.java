@@ -32,6 +32,10 @@ public class DiaryController {
                 return processUpdate(req);
             }
 
+            case "petpkdiarywithMonth":{
+                return processEachPetWithMonth(req);
+            }
+
         }
 
         return null;
@@ -59,6 +63,7 @@ public class DiaryController {
 
                 }
                 res.data.put("diaryDTO", diaryDTO);
+                break;
             }
 
             case GET:{
@@ -73,10 +78,12 @@ public class DiaryController {
                 }
 
                 res.data.put("diaryList", resData);
+                break;
             }
         }
         return res;
     }
+
 
     private Response processEachPet(Request req) {
         Response res = null;
@@ -94,6 +101,29 @@ public class DiaryController {
                 }
 
                 res.data.put("diaryList", resData);
+                break;
+            }
+        }
+        return res;
+    }
+
+    private Response processEachPetWithMonth(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case GET:{
+                List<DiaryDTO> resData = null;
+
+                resData = diaryAppService.retrieveByMonthAndPetPK(((DiaryDTO)req.data.get("diaryDTO")));
+
+                if(resData.size()==0){
+                    res = new Response(Response.StatusCode.FAIL);
+                }else{
+                    res = new Response(Response.StatusCode.SUCCESS);
+                }
+
+                res.data.put("diaryList", resData);
+                break;
             }
         }
         return res;
@@ -113,6 +143,7 @@ public class DiaryController {
                     res = new Response(Response.StatusCode.FAIL);
                     res.data.put("messageDTO", errorMsg);
                 }
+                break;
             }
         }
 
@@ -136,6 +167,7 @@ public class DiaryController {
                     res = new Response(Response.StatusCode.FAIL);
                     res.data.put("messageDTO", errorMsg);
                 }
+                break;
             }
         }
 
