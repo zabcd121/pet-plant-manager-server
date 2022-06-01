@@ -50,7 +50,7 @@ public class PlantAppService {
 
         List<Plant> recommendedPlants = plantRecommendService.recommend(
                 dto.getLightDemand(), dto.getHumidity(), dto.getGrowthTp(),
-                dto.getGrowthSpeed(), dto.getMngLevel(), dto.getClCode()
+                dto.getGrowthSpeed(), dto.getMngLevel()
         );
 
         List<PlantDTO> res = new ArrayList<>();

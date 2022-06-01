@@ -60,7 +60,7 @@ public class PetPlantAppService {
 
     public PetPlantDTO updatePetPlant(PetPlantDTO dto) throws IllegalArgumentException{
 
-        PetPlant petPlant = petPlantManageSystem.updatePetPlant(dto.getPk(), dto.getUserID(), dto.getPetName());
+        PetPlant petPlant = petPlantManageSystem.updatePetPlant(dto.getPk(), dto.getUserID(), dto.getPetName(), dto.getPetImg());
 
         return ModelMapper.<PetPlant, PetPlantDTO>modelToDTO(petPlant, PetPlantDTO.class);
     }
