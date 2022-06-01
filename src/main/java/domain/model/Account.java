@@ -11,12 +11,18 @@ public class Account {
     private String name;
     private Set<PetPlant> myPets = new HashSet<>();
     private String token;
+    private String address;
+    private double x;
+    private double y;
 
     public static class Builder{
         private long pk;
         private String id;
         private String password;
         private String token;
+        private String address;
+        private double x;
+        private double y;
 
         private Builder(String id, String password) {
             this.pk = -1;
@@ -31,6 +37,21 @@ public class Account {
 
         public Builder token(String value){
             token = value;
+            return this;
+        }
+
+        public Builder address(String value){
+            address = value;
+            return this;
+        }
+
+        public Builder x(double value) {
+            x = value;
+            return this;
+        }
+
+        public Builder y(double value) {
+            y = value;
             return this;
         }
 

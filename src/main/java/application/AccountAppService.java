@@ -33,7 +33,10 @@ public class AccountAppService {
     }
 
     public boolean signup(AccountDTO accDTO){
-        return accDomainService.signUp(accDTO.getId(), accDTO.getPassword());
+        return accDomainService.signUp(
+                accDTO.getId(), accDTO.getPassword(), accDTO.getAddress(),
+                accDTO.getX(), accDTO.getY()
+        );
     }
 
 }

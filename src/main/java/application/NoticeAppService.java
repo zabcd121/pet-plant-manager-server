@@ -1,19 +1,10 @@
 package application;
 
-import com.mysql.cj.xdevapi.JsonParser;
-import domain.model.Account;
-import domain.model.Notice;
-import domain.model.PetPlant;
-import domain.model.Plant;
-import domain.repository.AccountRepository;
-import domain.repository.NoticeRepository;
-import domain.repository.PetPlantRepository;
-import domain.repository.PlantRepository;
-import domain.service.PetPlantManageSystem;
+import domain.model.*;
+import domain.repository.*;
 import dto.AccountDTO;
 import dto.ModelMapper;
 import dto.NoticeDTO;
-import dto.PetPlantDTO;
 import infra.database.option.account.PKOption;
 import infra.database.option.account.TokenOption;
 import infra.database.option.petPlant.UserPKOption;
@@ -25,155 +16,137 @@ import org.json.simple.parser.ParseException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
 public class NoticeAppService {
 
-    private static  final String OPEN_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast/daily?";
-    private static final String OPEN_WEATHER_USER_KEY = "키 들어갈 자리";
+    private static final String OPEN_WEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast/daily?";
+    private static final String OPEN_WEATHER_USER_KEY = "9fe0e398a531127b970aa5ef1762a749";
 
     private AccountRepository accRepo;
     private PetPlantRepository petRepo;
     private PlantRepository plantRepo;
     private NoticeRepository noticeRepo;
+    private WateringRepository wateringRepo;
 
 
-    public NoticeAppService(AccountRepository accRepo, PetPlantRepository petRepo, PlantRepository plantRepo, NoticeRepository noticeRepo){
+    public NoticeAppService(AccountRepository accRepo, PetPlantRepository petRepo, PlantRepository plantRepo, NoticeRepository noticeRepo, WateringRepository wateringRepo) {
         this.accRepo = accRepo;
         this.petRepo = petRepo;
         this.plantRepo = plantRepo;
         this.noticeRepo = noticeRepo;
+        this.wateringRepo = wateringRepo;
     }
 
     public List<NoticeDTO> createNotice(AccountDTO accDTO) { //아침 9시에 알림 보냄
-
         List<Notice> noticeList = new ArrayList<>();
         List<NoticeDTO> noticeDTOList = new ArrayList<>();
-        Notice notice;
+        Notice notice = Notice.builder()
+                .targetAccId(accDTO.getPk())
+                .targetPetId(0)
+                .noticedTime(LocalDate.now())
+                .build();
 
         try {
-            if(noticeRepo.findByOption(new PKOption(accDTO.getPk())) != null){
-                return null;
+            if (noticeRepo.findByOption(new infra.database.option.notice.UserPKOption(accDTO.getPk())).size()!=0) {
+                return retrieveNotices(accDTO.getToken());
             }
-//            URL url = new URL(OPEN_WEATHER_URL + "lat=" + accDTO.getLat() + "&lon=" + accDTO.getLon() + "&lang=kr&units=metric&appid=" + OPEN_WEATHER_USER_KEY);
-            URL url = new URL(OPEN_WEATHER_URL + "lat=36.1379262" +  "&lon=128.411519"  + "&lang=kr&units=metric&appid=" + OPEN_WEATHER_USER_KEY);
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line = "";
-            String response = "";
 
-            while((line = br.readLine()) != null){
-                response = response.concat(line);
-            }
-            System.out.println(response); //확인용
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObj = (JSONObject) jsonParser.parse(response);
-
-            JSONArray jsonArr = (JSONArray) jsonObj.get("list");
-            JSONObject totWeatherObj = (JSONObject) jsonArr.get(0);
-            JSONObject tempObj = (JSONObject) totWeatherObj.get("temp");
-            JSONArray weatherArr = (JSONArray) totWeatherObj.get("weather");
-            JSONObject weatherObj = (JSONObject) weatherArr.get(0);
-
-            int humidity = Integer.parseInt(totWeatherObj.get("humidity").toString());
-            float temp_min =  Float.parseFloat(tempObj.get("min").toString());
-            float temp_max = Float.parseFloat(tempObj.get("max").toString());
-            int weather_id = Integer.parseInt(weatherObj.get("id").toString());
-            System.out.println("최저 기온: " + temp_min + " 최대 기온: " + temp_max + " 습도: " + humidity + " 날씨 상태: " + weather_id);
-
-
+            Weather weather = loadWeather(accDTO);
             long accPk = accDTO.getPk();
 
-            List<PetPlant> pets = petRepo.findByOption(new PKOption(accPk));
-            Iterator iter = pets.iterator();
+            List<PetPlant> petList = petRepo.findByOption(new UserPKOption(accPk));
 
-            if((temp_max - temp_min) >= 15 ){/*accPk, -1, "일교차가 심하니 식물들을 실내로 넣어주세요", new Date()*/
-                notice = Notice.builder()
-                            .targetAccId(accPk)
-                            .targetPetId(0)
-                            .content("일교차가 심하니 식물들을 실내로 넣어주세요")
-                            .noticedTime(LocalDate.now())
-                            .build();
+            if (weather.isHugeTempRange()) {/*accPk, -1, "일교차가 심하니 식물들을 실내로 넣어주세요", new Date()*/
+                notice.setContent(
+                        "일교차가 심하니 식물들을 실내로 넣어주세요"
+                );
 
                 noticeList.add(notice);
-            }else if( weather_id == 800){
-                notice = Notice.builder()
-                        .targetAccId(accPk)
-                        .targetPetId(0)
-                        .content("오늘 날씨가 좋아요 식물들 햇빛을 보게 해주세요")
-                        .noticedTime(LocalDate.now())
-                        .build();
+            } else if (weather.isSunny()) {
+                notice.setContent(
+                        "오늘 날씨가 좋아요 식물들 햇빛을 보게 해주세요"
+                );
+
                 noticeList.add(notice);
             }
 
-            PetPlant pet;
-            long plantID;
-            long petID;
-            String petName;
-            Plant plant;
-            int petGrowthTp;
+            for (PetPlant petPlant : petList) {
+                Plant plant = plantRepo.findByID(petPlant.getPlantID());
 
-            while(iter.hasNext()){
-
-                pet = (PetPlant) iter.next();
-                plantID = pet.getPlantID();
-                petID = pet.getPk();
-                petName = pet.getPetName();
-                plant = plantRepo.findByID(plantID);
-                petGrowthTp = plant.getGrowthTp();
-
-                if(temp_max >= petGrowthTp){
-                    notice = Notice.builder()
+                notice = Notice.builder()
                             .targetAccId(accPk)
-                            .targetPetId(petID)
-                            .targetPetName(petName)
-                            .content("오늘 최고온도가 " + temp_max + "℃ " + "로 "  + petName + "이가 위험하니 조심해주세요!")
+                            .targetPetId(petPlant.getPk())
+                            .targetPetName(petPlant.getPetName())
                             .noticedTime(LocalDate.now())
                             .build();
+
+                //날씨 관련 알림
+                if (plant.checkMaxTemp(weather.getMaxTemp())) {
+                    notice.setContent(
+                        "오늘 최고온도가 " + weather.getMaxTemp() + "℃ "
+                                + "로 " + petPlant.getPetName() + "이가 위험하니 조심해주세요!"
+                    );
 
                     noticeList.add(notice);
-
-                }else if(temp_min <= petGrowthTp){
-                    notice = Notice.builder()
-                            .targetAccId(accPk)
-                            .targetPetId(petID)
-                            .targetPetName(petName)
-                            .content("오늘 최고온도가 " + temp_max +"℃ " + "로 "  + pet.getPetName() + "이가 위험하니 조심해주세요!")
-                            .noticedTime(LocalDate.now())
-                            .build();
+                } else if (plant.checkMinTemp(weather.getMinTemp())) {
+                    notice.setContent(
+                        "오늘 최고온도가 " + weather.getMinTemp() + "℃ " +
+                                "로 " + petPlant.getPetName() + "이가 위험하니 조심해주세요!"
+                    );
 
                     noticeList.add(notice);
                 }
-            }
-            String petPlantName;
-            for(Notice n : noticeList){
-                noticeRepo.save(n);
-                noticeDTOList.add(ModelMapper.<Notice, NoticeDTO>modelToDTO(n, NoticeDTO.class));
-            }
 
-            return noticeDTOList;
+                List<Watering> wateringList = wateringRepo.findByOption();
+                wateringList.sort(Collections.reverseOrder());
+                Watering lastWatering = wateringList.get(0);
 
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+                //물주기 관련 알림
+                if(plant.checkWateringCycle(
+                        weather.getAverTemp(), weather.getHumidity(),
+                        lastWatering.getWateredDays()
+                )){
+                    noticeList.add(
+                            Notice.builder()
+                                    .targetAccId(accPk)
+                                    .targetPetId(petPlant.getPk())
+                                    .targetPetName(petPlant.getPetName())
+                                    .content(
+                                            String.format(
+                                                    "물준지 %d일 지났습니다. %s가 마르지 않았나요?",
+                                                        lastWatering.getWateredDays(), petPlant.getPetName()
+                                                    )
+                                    )
+                                    .noticedTime(LocalDate.now())
+                                    .build()
+                    );
+                }
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
+        for (Notice n : noticeList) {
+            noticeRepo.save(n);
+            noticeDTOList.add(ModelMapper.<Notice, NoticeDTO>modelToDTO(n, NoticeDTO.class));
+        }
+
+        return noticeDTOList;
     }
 
-    public List<NoticeDTO> retrieveNotices(String token){
 
+    public List<NoticeDTO> retrieveNotices(String token) {
         Account acc = accRepo.findByOption(new TokenOption(token)).get(0);
 
         List<Notice> list = noticeRepo.findByOption(new UserPKOption(acc.getPk()));
         List<NoticeDTO> resList = new ArrayList<>();
 
-        for(Notice notice : list){
+        for (Notice notice : list) {
             resList.add(
                     ModelMapper.<Notice, NoticeDTO>modelToDTO(notice, NoticeDTO.class)
             );
@@ -182,10 +155,45 @@ public class NoticeAppService {
         return resList;
     }
 
-    public void deleteNotice() throws IllegalArgumentException{
+    public void deleteNotice() throws IllegalArgumentException {
 
         noticeRepo.remove();
 
     }
+
+    private static Weather loadWeather(AccountDTO accDTO) throws IOException, ParseException {
+        URL url = new URL(OPEN_WEATHER_URL + "lat=" + accDTO.getX() + "&lon=" + accDTO.getY() + "&lang=kr&units=metric&appid=" + OPEN_WEATHER_USER_KEY);
+        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+        String line = "";
+        String response = "";
+
+        while ((line = br.readLine()) != null) {
+            response = response.concat(line);
+        }
+        System.out.println(response); //확인용
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) jsonParser.parse(response);
+
+        JSONArray jsonArr = (JSONArray) jsonObj.get("list");
+        JSONObject totWeatherObj = (JSONObject) jsonArr.get(0);
+        JSONObject tempObj = (JSONObject) totWeatherObj.get("temp");
+        JSONArray weatherArr = (JSONArray) totWeatherObj.get("weather");
+        JSONObject weatherObj = (JSONObject) weatherArr.get(0);
+
+        Weather weather = Weather.builder()
+                .humidity(
+                        Integer.parseInt(totWeatherObj.get("humidity").toString()))
+                .minTemp(
+                        Float.parseFloat(tempObj.get("min").toString()))
+                .maxTemp(
+                        Float.parseFloat(tempObj.get("max").toString()))
+                .weatherID(
+                        Integer.parseInt(weatherObj.get("id").toString())
+                ).build();
+
+        return weather;
+    }
+
 
 }

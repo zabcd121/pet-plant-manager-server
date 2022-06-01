@@ -27,8 +27,8 @@ import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-//        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
-//        l.run();
+        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
+        l.run();
 
 //        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
 //

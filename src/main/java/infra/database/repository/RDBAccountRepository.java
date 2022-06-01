@@ -18,10 +18,13 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
     private final static String ACCOUNT_ID = "account_ID";
     private final static String ACCOUNT_PW = "account_PW";
     private final static String TOKEN = "token";
+    private final static String ADDRESS = "address";
+    private final static String X = "x";
+    private final static String Y = "y";
 
     private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
             ACCOUNT_ID, ACCOUNT_PW,
-            TOKEN
+            TOKEN, ADDRESS, X, Y
     };
 
     @Override
@@ -55,6 +58,9 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
                     ps.setString(1, dto.getId());
                     ps.setString(2, dto.getPassword());
                     ps.setString(3, dto.getToken());
+                    ps.setString(4, dto.getAddress());
+                    ps.setDouble(5, dto.getX());
+                    ps.setDouble(6, dto.getY());
                 }
         );
     }
@@ -67,7 +73,11 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
                 ps -> {
                     ps.setString(1, dto.getId());
                     ps.setString(2, dto.getPassword());
-                    ps.setLong(3, dto.getPk());
+                    ps.setString(3, dto.getToken());
+                    ps.setString(4, dto.getAddress());
+                    ps.setDouble(5, dto.getX());
+                    ps.setDouble(6, dto.getY());
+                    ps.setLong(7, dto.getPk());
                 }
         );
     }
@@ -95,7 +105,11 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
                     rs.getString(ACCOUNT_ID),
                     rs.getString(ACCOUNT_PW)
             ).pk(rs.getLong(ACCOUNT_PK))
-                    .token(rs.getString(TOKEN)).build();
+                    .token(rs.getString(TOKEN))
+                    .address(rs.getString(ADDRESS))
+                    .x(rs.getDouble(X))
+                    .y(rs.getDouble(Y))
+                    .build();
         }
 
 
@@ -111,7 +125,11 @@ public class RDBAccountRepository extends AbstractRepository<Account> implements
                     rs.getString(ACCOUNT_ID),
                     rs.getString(ACCOUNT_PW)
             ).pk(rs.getLong(ACCOUNT_PK))
-                    .token(rs.getString(TOKEN)).build();
+                    .token(rs.getString(TOKEN))
+                    .address(rs.getString(ADDRESS))
+                    .x(rs.getDouble(X))
+                    .y(rs.getDouble(Y))
+                    .build();
 
             list.add(acc);
         }
