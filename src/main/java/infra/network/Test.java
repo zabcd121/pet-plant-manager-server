@@ -25,10 +25,6 @@ public class Test {
 //
 //        l.run();
 
-        RDBDiaryRepository p = new RDBDiaryRepository();
-        Diary diary = Diary.builder().pk(0).userPK(1).petPlantPK(27).title("제목1").content("내용1").diaryImg(new byte[3]).date(LocalDate.now()).build();
-        Diary diary1 = p.findByID(4);
-        System.out.println(diary1.toString());
 
 //        RDBPetPlantRepository p = new RDBPetPlantRepository();
 //
