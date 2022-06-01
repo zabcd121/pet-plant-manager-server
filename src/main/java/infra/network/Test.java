@@ -1,6 +1,8 @@
 package infra.network;
 
+import application.DiaryAppService;
 import application.PetPlantAppService;
+import dto.DiaryDTO;
 import dto.WateringDTO;
 import infra.database.repository.RDBAccountRepository;
 import infra.database.repository.RDBPetPlantRepository;
@@ -24,25 +26,29 @@ import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
-        l.run();
+//        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
+//        l.run();
 
 //        Listener l = new Listener(new RDBAccountRepository(), new RDBPlantRepository(), new RDBPetPlantRepository(), new RDBWateringRepository(), new RDBNoticeRepository(), new RDBDiaryRepository());
 //
 //        l.run();
 
-        RDBDiaryRepository p = new RDBDiaryRepository();
-
-        p.remove(Diary.builder().pk(5).build());
+//        RDBDiaryRepository p = new RDBDiaryRepository();
+//
+//        p.remove(Diary.builder().pk(5).build());
 //        p.save(diary);
-
+//        DiaryAppService diaryAppService = new DiaryAppService(new RDBDiaryRepository());
+//
+//        List<DiaryDTO> list = diaryAppService.retrieveByMonthAndPetPK(DiaryDTO.builder().date(LocalDate.now()).userPK(5).petPlantPK(27).build());
+//
+//        for(DiaryDTO d:list){
+//            System.out.println(d);
+//        }
 //            byte[] arr = {0x0001, 0x0002};
 //            p.save(
 //                    Diary.builder().pk(0).userPK(8).petPlantPK(37).title("new").content("내용12").diaryImg(arr).date(LocalDate.now()).build()
 //
 //            );
-
-
 
 //        RDBNoticeRepository n = new RDBNoticeRepository();
 //        Notice notice = Notice.builder().pk(0).targetAccId(1).targetPetId(27).targetPetName("찐이야").content("ㅉㄴㅉㄴㅉㄴ").noticedTime(LocalDate.now()).build();
