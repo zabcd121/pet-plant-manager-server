@@ -30,7 +30,7 @@ public class PetPlant{
         private long userID;
         private String petName;
         private LocalDate firstMetDay;
-        private byte[] petImg;
+        private byte[] petImg = new byte[0];
 
         public Builder(long plantID, long userID, String petName, LocalDate firstMetDay){
             this.plantID = plantID;

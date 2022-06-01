@@ -13,11 +13,9 @@ import infra.database.option.post.PKOption;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
         private final static String PET_PK = "pet_PK";
         private final static String TITLE = "title";
         private final static String CONTENT = "content";
-        private final static String POSTED_TIME = "posted_time";
+        private final static String POSTED_DATE = "posted_date";
         private final static String PHOTO = "photo";
 
         private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
@@ -44,7 +42,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                         ps.setLong(1, dto.getPetPk());
                         ps.setString(2, dto.getTitle());
                         ps.setString(3, dto.getContent());
-                        ps.setDate(4, Date.valueOf(dto.getPostedTime()));
+                        ps.setDate(4, Date.valueOf(dto.getPostedDate()));
                         ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
                     }
             );
@@ -59,7 +57,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                         ps.setLong(1, dto.getPetPk());
                         ps.setString(2, dto.getTitle());
                         ps.setString(3, dto.getContent());
-                        ps.setDate(4, Date.valueOf(dto.getPostedTime()));
+                        ps.setDate(4, Date.valueOf(dto.getPostedDate()));
                         ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
                     }
             );
@@ -120,7 +118,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                         .petPk(rs.getLong(PET_PK))
                         .title(rs.getString(TITLE))
                         .content(rs.getString(CONTENT))
-                        .postedTime(rs.getTimestamp(POSTED_TIME).toLocalDateTime())
+                        .postedDate(rs.getDate(POSTED_DATE).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                         .imgBytes(imgBytes)
                         .build();
             }
@@ -145,7 +143,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                         .petPk(rs.getLong(PET_PK))
                         .title(rs.getString(TITLE))
                         .content(rs.getString(CONTENT))
-                        .postedTime(rs.getTimestamp(POSTED_TIME).toLocalDateTime())
+                        .postedDate(rs.getDate(POSTED_DATE).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                         .imgBytes(imgBytes)
                         .build();
 

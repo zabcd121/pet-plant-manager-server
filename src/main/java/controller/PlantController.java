@@ -55,15 +55,15 @@ public class PlantController {
 
         switch (req.method){
             case GET:{
-                PlantDTO data = plantAppService.recommendPlant((PlantDTO) req.data.get("plantDTO"));
+                List<PlantDTO> data = plantAppService.recommendPlant((PlantDTO) req.data.get("plantDTO"));
 
-                if(data==null){
+                if(data.size()==0){
                     res = new Response(Response.StatusCode.FAIL);
                 }else{
                     res = new Response(Response.StatusCode.SUCCESS);
                 }
 
-                res.data.put("plantDTO", data);
+                res.data.put("plantDTOList", data);
             }
         }
 

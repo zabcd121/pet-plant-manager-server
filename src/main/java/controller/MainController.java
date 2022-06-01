@@ -5,6 +5,7 @@ import domain.repository.AccountRepository;
 import domain.repository.NoticeRepository;
 import domain.repository.PetPlantRepository;
 import domain.repository.PlantRepository;
+import domain.repository.WateringRepository;
 import infra.network.Request;
 import infra.network.Response;
 
@@ -14,11 +15,13 @@ public class MainController {
     private final PetPlantController petPlantController;
     private final NoticeController noticeController;
 
-    public MainController(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, NoticeRepository noticeRepo) {
+
+    public MainController(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, NoticeRepository noticeRepo, WateringRepository wateringRepo) {
         accController = new AccountController(accRepo);
         plantController = new PlantController(plantRepo);
-        petPlantController = new PetPlantController(petPlantRepo, accRepo);
+        petPlantController = new PetPlantController(petPlantRepo, accRepo, wateringRepo);
         noticeController = new NoticeController(accRepo, petPlantRepo, plantRepo, noticeRepo);
+
     }
 
     public Response handle(Request req){

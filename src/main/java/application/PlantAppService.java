@@ -35,18 +35,26 @@ public class PlantAppService {
         }
     }
 
-    public PlantDTO recommendPlant(PlantDTO dto){
+    public List<PlantDTO> recommendPlant(PlantDTO dto){
         PlantRecommendService plantRecommendService = new PlantRecommendService(plantRepo);
 
-        Plant recommendedPlant = plantRecommendService.recommend(
+        List<Plant> recommendedPlants = plantRecommendService.recommend(
                 dto.getLightDemand(), dto.getHumidity(), dto.getGrowthTp(),
                 dto.getGrowthSpeed(), dto.getMngLevel(), dto.getClCode()
         );
 
-        if(recommendedPlant==null){
-            return null;
+        List<PlantDTO> res = new ArrayList<>();
+
+        if(recommendedPlants.size()==0){
+            return res;
         }else{
-            return ModelMapper.<Plant,PlantDTO>modelToDTO(recommendedPlant, PlantDTO.class);
+            for(Plant p : recommendedPlants){
+                res.add(
+                    ModelMapper.<Plant,PlantDTO>modelToDTO(p, PlantDTO.class)
+                );
+            }
         }
+
+        return res;
     }
 }

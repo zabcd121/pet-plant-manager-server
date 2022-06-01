@@ -30,7 +30,7 @@ public class PostAppService {
                             .petPk(postDTO.getPetPk())
                             .title(postDTO.getTitle())
                             .content(postDTO.getContent())
-                            .postedTime(postDTO.getPostedTime())
+                            .postedDate(postDTO.getPostedDate())
                             .imgBytes(postDTO.getImgBytes())
                             .build();
 
@@ -81,7 +81,7 @@ public class PostAppService {
         post.setContent(postDTO.getContent());
         post.setImgBytes(postDTO.getImgBytes());
         post.setPetPk(postDTO.getPetPk());
-        post.setPostedTime(postDTO.getPostedTime());
+        post.setPostedDate(postDTO.getPostedDate());
 
         postRepo.save(post);
 
