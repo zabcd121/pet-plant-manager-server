@@ -16,11 +16,7 @@ import java.sql.Date;
 import java.util.List;
 
 public class RDBNoticeRepository extends AbstractRepository<Notice> implements NoticeRepository {
-    long targetAccId;
 
-    long targetPetId;
-    String message;
-    Date noticedTime;
     private final static String TABLE_NAME = "notices";
     private final static String NOTICE_PK = "notice_PK";
     private final static String TARGET_ACC_ID = "target_acc_ID";
@@ -54,6 +50,8 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
         }
     }
 
+
+
     private long add(NoticeDTO dto) {
         return executeInsert(
                 SQLMaker.makeInsertSql(
@@ -83,15 +81,13 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
     }
 
     @Override
-    public void remove(Notice notice) {
-        NoticeDTO dto = ModelMapper.<Notice, NoticeDTO>modelToDTO(notice, NoticeDTO.class);
-
+    public void remove() {
         executeUpdateOrDelete(
-                SQLMaker.makeDeleteSql(
-                        TABLE_NAME, NOTICE_PK
+                SQLMaker.makeDeleteAllSql(
+                        TABLE_NAME
                 ),
                 ps -> {
-                    ps.setLong(1, dto.getPk());
+
                 }
         );
     }

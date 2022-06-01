@@ -175,9 +175,9 @@ public class NoticeAppService {
         return resList;
     }
 
-    public void deleteNotice(AccountDTO accountDTO) throws IllegalArgumentException{
+    public void deleteNotice() throws IllegalArgumentException{
 
-        noticeRepo.remove(accountDTO.getPk());
+        noticeRepo.remove();
 
     }
 

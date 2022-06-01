@@ -10,5 +10,5 @@ public interface NoticeRepository {
     Notice findByID(long id);
     List<Notice> findByOption(Option... options);
     long save(Notice notice);
-    void remove(long accPk);
+    void remove();
 }

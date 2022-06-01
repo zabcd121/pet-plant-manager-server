@@ -90,7 +90,7 @@ public class NoticeController {
         switch (req.method){
             case POST :{
                 try{
-                    noticeAppService.deleteNotice((AccountDTO) req.data.get("accountDTO"));
+                    noticeAppService.deleteNotice();
                     res = new Response(Response.StatusCode.SUCCESS);
                 }catch(IllegalArgumentException e){
                     MessageDTO errorMsg = new MessageDTO(e.getMessage());
