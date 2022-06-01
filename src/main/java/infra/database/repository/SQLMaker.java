@@ -6,7 +6,9 @@ public class SQLMaker {
     public static String makeSelectSql(String tableName, Option...options){
         String sql = String.format("SELECT * FROM %s", tableName);
 
-        return makeOptionSQL(sql, options);
+        sql = makeOptionSQL(sql, options);
+        System.out.println("sql = " + sql);
+        return sql;
     }
 
     public static String makeInsertSql(String tableName, String ...colNames){

@@ -4,6 +4,7 @@ import controller.MainController;
 import domain.repository.AccountRepository;
 import domain.repository.PetPlantRepository;
 import domain.repository.PlantRepository;
+import domain.repository.WateringRepository;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,10 +17,10 @@ public class Server extends Thread {
     private int threadID;
     private boolean running;
 
-    public Server(Socket socket, int id, AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo) {
+    public Server(Socket socket, int id, AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, WateringRepository wateringRepo) {
         soc = socket;
         threadID = id;
-        mainController = new MainController(accRepo, plantRepo, petPlantRepo);
+        mainController = new MainController(accRepo, plantRepo, petPlantRepo, wateringRepo);
         try{
             is = new ObjectInputStream(
                     soc.getInputStream()

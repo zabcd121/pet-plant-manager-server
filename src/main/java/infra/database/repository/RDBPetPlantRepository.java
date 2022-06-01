@@ -109,6 +109,7 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
                     rs.getString(NAME),
                     rs.getDate(FIRST_MET_DAY).toLocalDate()
             ).petImg(imgBytes)
+                .id(rs.getLong(PET_PLANT_PK))
             .build();
         }
 
@@ -134,6 +135,7 @@ public class RDBPetPlantRepository extends AbstractRepository<PetPlant> implemen
                     rs.getString(NAME),
                     rs.getDate(FIRST_MET_DAY).toLocalDate()
             ).petImg(imgBytes)
+                    .id(rs.getLong(PET_PLANT_PK))
             .build();
 
             list.add(petPlant);

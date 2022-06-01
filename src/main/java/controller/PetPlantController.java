@@ -1,11 +1,12 @@
 package controller;
 
 import application.PetPlantAppService;
-import domain.model.PetPlant;
 import domain.repository.AccountRepository;
 import domain.repository.PetPlantRepository;
+import domain.repository.WateringRepository;
 import dto.MessageDTO;
 import dto.PetPlantDTO;
+import dto.WateringDTO;
 import infra.network.Request;
 import infra.network.Response;
 
@@ -14,8 +15,8 @@ import java.util.List;
 public class PetPlantController {
     private final PetPlantAppService petPlantAppService;
 
-    public PetPlantController(PetPlantRepository petPlantRepo, AccountRepository accRepo) {
-        petPlantAppService = new PetPlantAppService(petPlantRepo, accRepo);
+    public PetPlantController(PetPlantRepository petPlantRepo, AccountRepository accRepo, WateringRepository wateringRepo) {
+        petPlantAppService = new PetPlantAppService(petPlantRepo, accRepo, wateringRepo);
     }
 
     public Response handle(Request req) {
@@ -30,6 +31,15 @@ public class PetPlantController {
             }
             case "delete":{
                 return processDelete(req);
+            }
+            case "watering":{
+                return processWatering(req);
+            }
+            case "wateringDelete":{
+                return processWateringDelete(req);
+            }
+            case "monthWatering":{
+                return processMonthWatering(req);
             }
         }
 
@@ -46,20 +56,14 @@ public class PetPlantController {
 
                 try{
                     petPlantDTO = petPlantAppService.createPetPlant((PetPlantDTO) req.data.get("petPlantDTO"));
+                    res = new Response(Response.StatusCode.SUCCESS);
+                    res.data.put("petPlantDTO", petPlantDTO);
                 }catch(IllegalArgumentException e){
                     errorMsg = e.getMessage();
-                }finally {
-                    if(petPlantDTO==null){
-                        res = new Response(Response.StatusCode.FAIL);
-                        res.data.put("messageDTO", new MessageDTO(errorMsg));
-                    }else{
-                        res = new Response(Response.StatusCode.SUCCESS);
-                    }
-
+                    res = new Response(Response.StatusCode.FAIL);
+                    res.data.put("messageDTO", new MessageDTO(errorMsg));
                 }
-
-
-                res.data.put("petPlantDTO", petPlantDTO);
+                break;
             }
 
             case GET:{
@@ -74,6 +78,7 @@ public class PetPlantController {
                 }
 
                 res.data.put("petPlantList", resData);
+                break;
             }
         }
 
@@ -121,4 +126,80 @@ public class PetPlantController {
 
         return res;
     }
+
+    private Response processWatering(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case GET :{
+                List<WateringDTO> data =
+                        petPlantAppService.retrieveWateringHistory((PetPlantDTO) req.data.get("petPlantDTO"));
+
+                if(data.size()==0){
+                    res = new Response(Response.StatusCode.FAIL);
+                }else{
+                    res = new Response(Response.StatusCode.SUCCESS);
+                    res.data.put("wateringDTOList", data);
+                }
+                break;
+            }
+            case POST:{
+                try{
+                    WateringDTO data = petPlantAppService.createWatering(
+                            (WateringDTO) req.data.get("wateringDTO")
+                    );
+
+                    res = new Response(Response.StatusCode.SUCCESS);
+                    res.data.put("wateringDTO", data);
+                }catch (IllegalArgumentException e){
+                    res = new Response(Response.StatusCode.FAIL);
+                    res.data.put("messageDTO", new MessageDTO(e.getMessage()));
+                }
+                break;
+            }
+
+        }
+
+        return res;
+    }
+
+    private Response processWateringDelete(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case POST:{
+                try{
+                    petPlantAppService.deleteWatering((WateringDTO) req.data.get("wateringDTO"));
+                    res = new Response(Response.StatusCode.SUCCESS);
+                }catch (IllegalArgumentException e){
+                    res = new Response(Response.StatusCode.FAIL);
+                    res.data.put("messageDTO", new MessageDTO(e.getMessage()));
+                }
+                break;
+            }
+        }
+
+        return res;
+    }
+
+    private Response processMonthWatering(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case GET :{
+                List<WateringDTO> data = petPlantAppService.retrieveWateringBy((WateringDTO) req.data.get("wateringDTO"));
+
+                if(data.size()==0){
+                    res = new Response(Response.StatusCode.FAIL);
+                }else{
+                    res = new Response(Response.StatusCode.SUCCESS);
+                    res.data.put("wateringDTOList", data);
+                }
+            }
+        }
+
+        return res;
+    }
+
+
 }

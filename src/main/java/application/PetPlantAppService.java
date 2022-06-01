@@ -2,30 +2,36 @@ package application;
 
 import domain.model.Account;
 import domain.model.PetPlant;
+import domain.model.Watering;
 import domain.repository.AccountRepository;
 import domain.repository.PetPlantRepository;
+import domain.repository.WateringRepository;
 import domain.service.PetPlantManageSystem;
 import dto.ModelMapper;
 import dto.PetPlantDTO;
+import dto.WateringDTO;
 import infra.database.option.account.TokenOption;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PetPlantAppService {
     private final PetPlantRepository petPlantRepo;
     private final AccountRepository accRepo;
+    private final PetPlantManageSystem petPlantManageSystem;
 
-    public PetPlantAppService(PetPlantRepository petPlantRepo, AccountRepository accRepo){
+    public PetPlantAppService(PetPlantRepository petPlantRepo, AccountRepository accRepo, WateringRepository wateringRepo){
         this.petPlantRepo = petPlantRepo;
         this.accRepo = accRepo;
+
+        petPlantManageSystem = new PetPlantManageSystem(petPlantRepo, wateringRepo);
     }
 
     public PetPlantDTO createPetPlant(PetPlantDTO dto) throws IllegalArgumentException{
-        PetPlantManageSystem petPlantManageSystem = new PetPlantManageSystem(petPlantRepo);
 
         long petPlantID = petPlantManageSystem.create(
-                dto.getPlantID(), dto.getUserID(), dto.getPetName(), dto.getFirstMetDay()
+                dto.getPlantID(), dto.getUserID(), dto.getPetName(), dto.getFirstMetDay(), dto.getPetImg()
         );
 
         dto.setPk(petPlantID);
@@ -38,7 +44,6 @@ public class PetPlantAppService {
     }
 
     public List<PetPlantDTO> retrievePetPlant(String token){
-        PetPlantManageSystem petPlantManageSystem = new PetPlantManageSystem(petPlantRepo);
         Account acc = accRepo.findByOption(new TokenOption(token)).get(0);
 
         List<PetPlant> list = petPlantManageSystem.retrievePetPlant(acc.getPk());
@@ -54,7 +59,6 @@ public class PetPlantAppService {
     }
 
     public PetPlantDTO updatePetPlant(PetPlantDTO dto) throws IllegalArgumentException{
-        PetPlantManageSystem petPlantManageSystem = new PetPlantManageSystem(petPlantRepo);
 
         PetPlant petPlant = petPlantManageSystem.updatePetPlant(dto.getPk(), dto.getUserID(), dto.getPetName());
 
@@ -62,7 +66,41 @@ public class PetPlantAppService {
     }
 
     public void deletePetPlant(PetPlantDTO dto) throws IllegalArgumentException{
-        PetPlantManageSystem petPlantManageSystem = new PetPlantManageSystem(petPlantRepo);
         petPlantManageSystem.deletePetPlant(dto.getPk(), dto.getUserID());
+    }
+
+    public List<WateringDTO> retrieveWateringHistory(PetPlantDTO dto){
+        List<Watering> wateringList = petPlantManageSystem.retrieveWateringHistory(dto.getPk());
+        List<WateringDTO> resList = new ArrayList<>();
+
+        for(Watering watering : wateringList){
+            resList.add(
+                    ModelMapper.<Watering, WateringDTO>modelToDTO(watering, WateringDTO.class)
+            );
+        }
+
+        return resList;
+    }
+
+    public List<WateringDTO> retrieveWateringBy(WateringDTO dto){
+        List<Watering> list = petPlantManageSystem.retrieveWateringBy(dto.getUserPK(), dto.getWateringDay());
+        List<WateringDTO> resList = new ArrayList<>();
+
+        for(Watering watering : list){
+            resList.add(
+                    ModelMapper.<Watering, WateringDTO>modelToDTO(watering, WateringDTO.class)
+            );
+        }
+
+        return resList;
+    }
+
+    public WateringDTO createWatering(WateringDTO dto){
+        Watering watering = petPlantManageSystem.createWatering(dto.getPetPlantPK(), dto.getWateringDay(), dto.getUserPK());
+        return ModelMapper.modelToDTO(watering, WateringDTO.class);
+    }
+
+    public void deleteWatering(WateringDTO dto){
+        petPlantManageSystem.deleteWatering(dto.getWateringPK());
     }
 }
