@@ -9,11 +9,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class Notice {
-    long pk;
-    long targetAccId;
-
-    long targetPetId;
-    String content;
-    LocalDate noticedTime;
+    private long pk;
+    private long targetAccId;
+    private long targetPetId;
+    private String targetPetName;
+    private String content;
+    private LocalDate noticedTime;
 
 }

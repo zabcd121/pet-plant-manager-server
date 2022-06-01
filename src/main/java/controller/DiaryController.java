@@ -1,6 +1,6 @@
 package controller;
 
-import application.PostAppService;
+import application.DiaryAppService;
 import domain.repository.*;
 import dto.*;
 import infra.network.Request;
@@ -8,21 +8,21 @@ import infra.network.Response;
 
 import java.util.List;
 
-public class PostController {
-    private final PostAppService postAppService;
+public class DiaryController {
+    private final DiaryAppService diaryAppService;
 
-    public PostController(PostRepository postRepo) {
-        postAppService = new PostAppService(postRepo);
+    public DiaryController(DiaryRepository diaryRepo) {
+        diaryAppService = new DiaryAppService(diaryRepo);
     }
 
     public Response handle(Request req) {
         String secondLevel = URLParser.parseURLByLevel(req.url, 2);
 
         switch(secondLevel){
-            case "myposts":{
-                return processPost(req);
+            case "mydiary":{
+                return processDiary(req);
             }
-            case "petpkposts":{
+            case "petpkdiary":{
                 return processEachPet(req);
             }
             case "delete":{
@@ -37,7 +37,7 @@ public class PostController {
         return null;
     }
 
-    private Response processPost(Request req) {
+    private Response processDiary(Request req) {
         Response res = null;
 
         switch (req.method){
@@ -46,7 +46,7 @@ public class PostController {
                 DiaryDTO diaryDTO = null;
 
                 try{
-                    diaryDTO = postAppService.createPost((DiaryDTO) req.data.get("postDTO"));
+                    diaryDTO = diaryAppService.createDiary((DiaryDTO) req.data.get("diaryDTO"));
                 }catch(IllegalArgumentException e){
                     errorMsg = e.getMessage();
                 }finally {
@@ -58,13 +58,13 @@ public class PostController {
                     }
 
                 }
-                res.data.put("postDTO", diaryDTO);
+                res.data.put("diaryDTO", diaryDTO);
             }
 
             case GET:{
                 List<DiaryDTO> resData = null;
 
-                resData = postAppService.retrieveAll(req.token);
+                resData = diaryAppService.retrieveAll(req.token);
 
                 if(resData.size()==0){
                     res = new Response(Response.StatusCode.FAIL);
@@ -72,7 +72,7 @@ public class PostController {
                     res = new Response(Response.StatusCode.SUCCESS);
                 }
 
-                res.data.put("postList", resData);
+                res.data.put("diaryList", resData);
             }
         }
         return res;
@@ -85,7 +85,7 @@ public class PostController {
             case GET:{
                 List<DiaryDTO> resData = null;
 
-                resData = postAppService.retrieve(((DiaryDTO)req.data.get("PostDTO")).getPetPk());
+                resData = diaryAppService.retrieve(((DiaryDTO)req.data.get("diaryDTO")).getPetPlantPK());
 
                 if(resData.size()==0){
                     res = new Response(Response.StatusCode.FAIL);
@@ -93,7 +93,7 @@ public class PostController {
                     res = new Response(Response.StatusCode.SUCCESS);
                 }
 
-                res.data.put("postList", resData);
+                res.data.put("diaryList", resData);
             }
         }
         return res;
@@ -106,7 +106,7 @@ public class PostController {
         switch (req.method){
             case POST :{
                 try{
-                    postAppService.delete((DiaryDTO) req.data.get("postDTO"));
+                    diaryAppService.delete((DiaryDTO) req.data.get("diaryDTO"));
                     res = new Response(Response.StatusCode.SUCCESS);
                 }catch(IllegalArgumentException e){
                     MessageDTO errorMsg = new MessageDTO(e.getMessage());
@@ -128,9 +128,9 @@ public class PostController {
                 MessageDTO errorMsg = null;
 
                 try{
-                    resData = postAppService.update((DiaryDTO) req.data.get("postDTO"));
+                    resData = diaryAppService.update((DiaryDTO) req.data.get("diaryDTO"));
                     res = new Response(Response.StatusCode.SUCCESS);
-                    res.data.put("postDTO", resData);
+                    res.data.put("diaryDTO", resData);
                 }catch (IllegalArgumentException e){
                     errorMsg = new MessageDTO(e.getMessage());
                     res = new Response(Response.StatusCode.FAIL);

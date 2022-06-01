@@ -3,21 +3,20 @@ package dto;
 import lombok.*;
 
 import java.time.LocalDate;
-
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class PostDTO {
+public class DiaryDTO {
 
     private long pk;
-    private long petPk;
+    private long petPlantPK;
+    private long userPK;
     private String title;
     private String content;
-    private LocalDate postedDate;
+    private LocalDate date;
 
     @Builder.Default
-    private byte[] imgBytes = new byte[0];
+    private byte[] diaryImg = new byte[0];
 }

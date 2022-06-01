@@ -9,24 +9,25 @@ import infra.database.option.account.TokenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostAppService {
+public class DiaryAppService {
 
-    private DiaryRepository postRepo;
+    private DiaryRepository diaryRepo;
 
-    public PostAppService(DiaryRepository postRepo){
-        this.postRepo = postRepo;
+    public DiaryAppService(DiaryRepository postRepo){
+        this.diaryRepo = postRepo;
     }
 
-    public DiaryDTO createPost(DiaryDTO diaryDTO){
+    public DiaryDTO createDiary(DiaryDTO diaryDTO){
         Diary diary = Diary.builder()
-                            .petPk(diaryDTO.getPetPk())
+                            .petPlantPK(diaryDTO.getPetPlantPK())
+                            .userPK(diaryDTO.getUserPK())
                             .title(diaryDTO.getTitle())
                             .content(diaryDTO.getContent())
-                            .postedDate(diaryDTO.getPostedDate())
-                            .imgBytes(diaryDTO.getImgBytes())
+                            .date(diaryDTO.getDate())
+                            .diaryImg(diaryDTO.getDiaryImg())
                             .build();
 
-        long postPK = postRepo.save(diary);
+        long postPK = diaryRepo.save(diary);
 
         diaryDTO.setPk(postPK);
 
@@ -38,16 +39,16 @@ public class PostAppService {
     }
 
     public void delete(DiaryDTO diaryDTO){
-        Diary diary = postRepo.findByID(diaryDTO.getPk());
-        postRepo.remove(diary);
+        Diary diary = diaryRepo.findByID(diaryDTO.getPk());
+        diaryRepo.remove(diary);
     }
 
     public List<DiaryDTO> retrieveAll(String token){
-        List<Diary> diaries = postRepo.findByOption(new TokenOption(token));
+        List<Diary> diaries = diaryRepo.findByOption(new TokenOption(token));
         List<DiaryDTO> diaryDTOList = new ArrayList<>();
 
         for(Diary p : diaries){
-            postRepo.save(p);
+            diaryRepo.save(p);
             diaryDTOList.add(ModelMapper.modelToDTO(p, DiaryDTO.class));
         }
 
@@ -55,11 +56,11 @@ public class PostAppService {
     }
 
     public List<DiaryDTO> retrieve(long petPK){
-        List<Diary> diaries = postRepo.findByOption(new infra.database.option.petPlant.PKOption(petPK));
+        List<Diary> diaries = diaryRepo.findByOption(new infra.database.option.petPlant.PKOption(petPK));
         List<DiaryDTO> diaryDTOList = new ArrayList<>();
 
         for(Diary p : diaries){
-            postRepo.save(p);
+            diaryRepo.save(p);
             diaryDTOList.add(ModelMapper.modelToDTO(p, DiaryDTO.class));
         }
 
@@ -67,15 +68,15 @@ public class PostAppService {
     }
 
     public DiaryDTO update(DiaryDTO diaryDTO){
-        Diary diary = postRepo.findByID(diaryDTO.getPk());
+        Diary diary = diaryRepo.findByID(diaryDTO.getPk());
 
         diary.setTitle(diaryDTO.getTitle());
         diary.setContent(diaryDTO.getContent());
-        diary.setImgBytes(diaryDTO.getImgBytes());
-        diary.setPetPk(diaryDTO.getPetPk());
-        diary.setPostedDate(diaryDTO.getPostedDate());
+        diary.setDiaryImg(diaryDTO.getDiaryImg());
+        diary.setPetPlantPK(diaryDTO.getPetPlantPK());
+        diary.setDate(diaryDTO.getDate());
 
-        postRepo.save(diary);
+        diaryRepo.save(diary);
 
         return ModelMapper.modelToDTO(diary, DiaryDTO.class);
     }

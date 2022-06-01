@@ -106,10 +106,13 @@ public class NoticeAppService {
                         .content("오늘 날씨가 좋아요 식물들 햇빛을 보게 해주세요")
                         .noticedTime(LocalDate.now())
                         .build();
+                noticeList.add(notice);
             }
 
             PetPlant pet;
             long plantID;
+            long petID;
+            String petName;
             Plant plant;
             int petGrowthTp;
 
@@ -117,14 +120,17 @@ public class NoticeAppService {
 
                 pet = (PetPlant) iter.next();
                 plantID = pet.getPlantID();
+                petID = pet.getPk();
+                petName = pet.getPetName();
                 plant = plantRepo.findByID(plantID);
                 petGrowthTp = plant.getGrowthTp();
 
                 if(temp_max >= petGrowthTp){
                     notice = Notice.builder()
                             .targetAccId(accPk)
-                            .targetPetId(plantID)
-                            .content("오늘 최고온도가 " + temp_max +"℃ " + "로 "  + pet.getPetName() + "이가 위험하니 조심해주세요!")
+                            .targetPetId(petID)
+                            .targetPetName(petName)
+                            .content("오늘 최고온도가 " + temp_max + "℃ " + "로 "  + petName + "이가 위험하니 조심해주세요!")
                             .noticedTime(LocalDate.now())
                             .build();
 
@@ -133,7 +139,8 @@ public class NoticeAppService {
                 }else if(temp_min <= petGrowthTp){
                     notice = Notice.builder()
                             .targetAccId(accPk)
-                            .targetPetId(plantID)
+                            .targetPetId(petID)
+                            .targetPetName(petName)
                             .content("오늘 최고온도가 " + temp_max +"℃ " + "로 "  + pet.getPetName() + "이가 위험하니 조심해주세요!")
                             .noticedTime(LocalDate.now())
                             .build();
@@ -141,7 +148,7 @@ public class NoticeAppService {
                     noticeList.add(notice);
                 }
             }
-
+            String petPlantName;
             for(Notice n : noticeList){
                 noticeRepo.save(n);
                 noticeDTOList.add(ModelMapper.<Notice, NoticeDTO>modelToDTO(n, NoticeDTO.class));

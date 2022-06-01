@@ -5,7 +5,7 @@ import infra.database.option.Option;
 
 import java.util.List;
 
-public interface PostRepository {
+public interface DiaryRepository {
 
     Diary findByID(long id);
     List<Diary> findByOption(Option... options);

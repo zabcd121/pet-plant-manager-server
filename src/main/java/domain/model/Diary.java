@@ -10,11 +10,12 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class Post {
+public class Diary {
     private long pk;
-    private long petPk;
+    private long petPlantPK;
+    private long userPK;
     private String title;
     private String content;
-    private LocalDate postedDate;
-    private byte[] imgBytes;
+    private LocalDate date;
+    private byte[] diaryImg;
 }

@@ -21,11 +21,12 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
     private final static String NOTICE_PK = "notice_PK";
     private final static String TARGET_ACC_ID = "target_acc_ID";
     private final static String TARGET_PET_ID = "target_pet_ID";
+    private final static String TARGET_PET_NAME = "target_pet_name";
     private final static String CONTENT = "content";
     private final static String NOTICED_TIME = "noticed_time";
 
     private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
-            TARGET_PET_ID, CONTENT, NOTICED_TIME
+            TARGET_ACC_ID, TARGET_PET_ID, TARGET_PET_NAME, CONTENT, NOTICED_TIME
     };
 
     @Override
@@ -60,8 +61,9 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
                 ps -> {
                     ps.setLong(1, dto.getTargetAccId());
                     ps.setLong(2, dto.getTargetPetId());
-                    ps.setString(3, dto.getContent());
-                    ps.setDate(4, Date.valueOf(dto.getNoticedTime()));
+                    ps.setString(3, dto.getTargetPetName());
+                    ps.setString(4, dto.getContent());
+                    ps.setDate(5, Date.valueOf(dto.getNoticedTime()));
                 }
         );
     }
@@ -74,8 +76,9 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
                 ps -> {
                     ps.setLong(1, dto.getTargetAccId());
                     ps.setLong(2, dto.getTargetPetId());
-                    ps.setString(3, dto.getContent());
-                    ps.setDate(4, Date.valueOf(dto.getNoticedTime()));
+                    ps.setString(3, dto.getTargetPetName());
+                    ps.setString(4, dto.getContent());
+                    ps.setDate(5, Date.valueOf(dto.getNoticedTime()));
                 }
         );
     }
@@ -101,6 +104,8 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
                         .pk(rs.getLong(NOTICE_PK))
                         .targetAccId(rs.getLong(TARGET_ACC_ID))
                         .targetPetId(rs.getLong(TARGET_PET_ID))
+                        .targetPetName(rs.getString(TARGET_PET_NAME))
+                        .content(rs.getString(CONTENT))
                         .noticedTime(rs.getDate(NOTICED_TIME).toLocalDate())
                         .build();
         }
@@ -118,6 +123,8 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
                     .pk(rs.getLong(NOTICE_PK))
                     .targetAccId(rs.getLong(TARGET_ACC_ID))
                     .targetPetId(rs.getLong(TARGET_PET_ID))
+                    .targetPetName(rs.getString(TARGET_PET_NAME))
+                    .content(rs.getString(CONTENT))
                     .noticedTime(rs.getDate(NOTICED_TIME).toLocalDate())
                     .build();
 
