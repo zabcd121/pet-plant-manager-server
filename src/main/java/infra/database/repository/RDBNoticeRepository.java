@@ -80,6 +80,7 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
                     ps.setString(3, dto.getTargetPetName());
                     ps.setString(4, dto.getContent());
                     ps.setDate(5, Date.valueOf(dto.getNoticedTime()));
+                    ps.setLong(6, dto.getPk());
                 }
         );
     }

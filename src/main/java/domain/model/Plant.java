@@ -3,9 +3,12 @@ package domain.model;
 import lombok.*;
 
 import java.time.LocalDate;
+<<<<<<< HEAD
+=======
 import java.time.Period;
 
 import static java.time.Period.between;
+>>>>>>> 95bae7e617f31d6c18897b007cf28bd3c737f7ff
 
 @ToString
 @Builder
@@ -31,6 +34,7 @@ public class Plant {
             12.5, 18, 23, 28
     };
 
+
     private static double[] WATERING_CYCLE_TO_DAY = {
             1.5, 1, 0.8, 0.5
     };
@@ -50,6 +54,7 @@ public class Plant {
 //            1.5, 1, 0.8, 0.5
 //    };
 
+
     public long getPk() {
         return pk;
     }
@@ -63,7 +68,8 @@ public class Plant {
     }
 
     public double calculateSimilarity(float lightDemand, int humidity, int growthTp,
-                                     int growthSpeed, int mngLevel, String classCode, int waterCycle) {
+                                      int growthSpeed, int mngLevel, String classCode, int waterCycle) {
+
 
         double dotProduct = 0;
         dotProduct += this.lightDemand*lightDemand;
@@ -131,6 +137,7 @@ public class Plant {
         }
 
         return point;
+
     }
 
     public boolean checkWateringCycle(
@@ -164,5 +171,6 @@ public class Plant {
         }else{
             return 0.5;
         }
+
     }
 }
