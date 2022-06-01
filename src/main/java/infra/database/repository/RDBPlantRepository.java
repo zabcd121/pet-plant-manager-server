@@ -26,10 +26,15 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
     private final static String LIGHT_DEMAND = "light_demand";
     private final static String CLASS_CODE = "class_code";
     private final static String IMAGE = "image";
+    private final static String WATER_SPRING = "water_spring";
+    private final static String WATER_SUM = "water_sum";
+    private final static String WATER_ATUM = "water_atum";
+    private final static String WATER_WINTER = "water_winter";
 
     private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
             NAME, HUMIDITY, GROWTH_TMP, GROWTH_SPEED,
-            MANAGE_LEVEL, LIGHT_DEMAND, CLASS_CODE, IMAGE
+            MANAGE_LEVEL, LIGHT_DEMAND, CLASS_CODE, IMAGE,
+            WATER_SPRING, WATER_SUM, WATER_ATUM, WATER_WINTER
     };
 
 
@@ -65,8 +70,12 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     ps.setInt(4, dto.getGrowthSpeed());
                     ps.setInt(5, dto.getMngLevel());
                     ps.setFloat(6, dto.getLightDemand());
-                    ps.setFloat(7, dto.getClCode());
+                    ps.setString(7, dto.getClCode());
                     ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
+                    ps.setInt(9, dto.getWaterSpring());
+                    ps.setInt(10, dto.getWaterSummer());
+                    ps.setInt(11, dto.getWaterAutumn());
+                    ps.setInt(12, dto.getWaterWinter());
                 }
         );
     }
@@ -81,9 +90,13 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     ps.setInt(4, dto.getGrowthSpeed());
                     ps.setInt(5, dto.getMngLevel());
                     ps.setFloat(6, dto.getLightDemand());
-                    ps.setFloat(7, dto.getClCode());
+                    ps.setString(7, dto.getClCode());
                     ps.setBinaryStream(8, new ByteArrayInputStream(dto.getImgBytes()));
-                    ps.setLong(9, dto.getPk());
+                    ps.setInt(9, dto.getWaterSpring());
+                    ps.setInt(10, dto.getWaterSummer());
+                    ps.setInt(11, dto.getWaterAutumn());
+                    ps.setInt(12, dto.getWaterWinter());
+                    ps.setLong(13, dto.getPk());
                 }
         );
     }
@@ -121,7 +134,11 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     .growthSpeed(rs.getInt(GROWTH_SPEED))
                     .mngLevel(rs.getInt(MANAGE_LEVEL))
                     .lightDemand(rs.getFloat(LIGHT_DEMAND))
-                    .clCode(rs.getFloat(CLASS_CODE))
+                    .clCode(rs.getString(CLASS_CODE))
+                    .waterSpring(rs.getInt(WATER_SPRING))
+                    .waterSummer(rs.getInt(WATER_SUM))
+                    .waterAutumn(rs.getInt(WATER_ATUM))
+                    .waterWinter(rs.getInt(WATER_WINTER))
                     .imgBytes(imgBytes)
                     .build();
         }
@@ -150,7 +167,11 @@ public class RDBPlantRepository extends AbstractRepository<Plant> implements Pla
                     .growthSpeed(rs.getInt(GROWTH_SPEED))
                     .mngLevel(rs.getInt(MANAGE_LEVEL))
                     .lightDemand(rs.getFloat(LIGHT_DEMAND))
-                    .clCode(rs.getFloat(CLASS_CODE))
+                    .clCode(rs.getString(CLASS_CODE))
+                    .waterSpring(rs.getInt(WATER_SPRING))
+                    .waterSummer(rs.getInt(WATER_SUM))
+                    .waterAutumn(rs.getInt(WATER_ATUM))
+                    .waterWinter(rs.getInt(WATER_WINTER))
                     .imgBytes(imgBytes)
                     .build();
 

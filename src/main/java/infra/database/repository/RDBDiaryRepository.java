@@ -58,6 +58,7 @@ public class RDBDiaryRepository extends AbstractRepository<Diary> implements Dia
                         ps.setString(4, dto.getContent());
                         ps.setDate(5, Date.valueOf(dto.getDate()));
                         ps.setBinaryStream(6, new ByteArrayInputStream(dto.getDiaryImg()));
+                        ps.setLong(7, dto.getPk());
                     }
             );
         }

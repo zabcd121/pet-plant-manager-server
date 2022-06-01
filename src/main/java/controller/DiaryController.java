@@ -59,6 +59,7 @@ public class DiaryController {
 
                 }
                 res.data.put("diaryDTO", diaryDTO);
+                break;
             }
 
             case GET:{
@@ -73,6 +74,7 @@ public class DiaryController {
                 }
 
                 res.data.put("diaryList", resData);
+                break;
             }
         }
         return res;

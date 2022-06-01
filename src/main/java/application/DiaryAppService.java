@@ -29,6 +29,7 @@ public class DiaryAppService {
                             .diaryImg(diaryDTO.getDiaryImg())
                             .build();
 
+
         long postPK = diaryRepo.save(diary);
 
         diaryDTO.setPk(postPK);
@@ -50,7 +51,6 @@ public class DiaryAppService {
         List<DiaryDTO> diaryDTOList = new ArrayList<>();
 
         for(Diary p : diaries){
-            diaryRepo.save(p);
             diaryDTOList.add(ModelMapper.modelToDTO(p, DiaryDTO.class));
         }
 
@@ -62,7 +62,6 @@ public class DiaryAppService {
         List<DiaryDTO> diaryDTOList = new ArrayList<>();
 
         for(Diary p : diaries){
-            diaryRepo.save(p);
             diaryDTOList.add(ModelMapper.modelToDTO(p, DiaryDTO.class));
         }
 

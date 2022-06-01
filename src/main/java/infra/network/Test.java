@@ -1,6 +1,7 @@
 package infra.network;
 
 import application.PetPlantAppService;
+import domain.model.Plant;
 import dto.WateringDTO;
 import infra.database.repository.RDBAccountRepository;
 import infra.database.repository.RDBPetPlantRepository;
@@ -12,6 +13,8 @@ import domain.model.Diary;
 import domain.model.Notice;
 import infra.database.option.diary.UserPKOption;
 import infra.database.repository.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,11 +34,6 @@ public class Test {
 //
 //        l.run();
 
-<<<<<<< HEAD
-=======
-        RDBDiaryRepository p = new RDBDiaryRepository();
-
-        p.remove(Diary.builder().pk(5).build());
 //        p.save(diary);
 
 //            byte[] arr = {0x0001, 0x0002};
@@ -50,7 +48,6 @@ public class Test {
 //        Notice notice = Notice.builder().pk(0).targetAccId(1).targetPetId(27).targetPetName("찐이야").content("ㅉㄴㅉㄴㅉㄴ").noticedTime(LocalDate.now()).build();
 //        notice.toString();
 //        n.findByID(1);
->>>>>>> 59a997d0b3368cfc937e6e16da6f5b7503be4571
 
 //        RDBPetPlantRepository p = new RDBPetPlantRepository();
 //
@@ -171,7 +168,7 @@ public class Test {
 //        }
 
 //        RDBPlantRepository r = new RDBPlantRepository();
-//        try(FileInputStream fis = new FileInputStream(new File("./purified.json"))) {
+//        try(FileInputStream fis = new FileInputStream(new File("./water_data.json"))) {
 //            String str = new String(fis.readAllBytes());
 //            JSONArray jsonArray = new JSONArray(str);
 //
@@ -187,7 +184,11 @@ public class Test {
 //                                .growthTp(obj.getInt("grwhTpCode"))
 //                                .growthSpeed(obj.getInt("grwtveCode"))
 //                                .mngLevel(obj.getInt("managelevelCode"))
-//                                .clCode(obj.getFloat("clCode"))
+//                                .clCode(obj.getString("clCode"))
+//                                .waterSpring(obj.getInt("waterSpring"))
+//                                .waterSummer(obj.getInt("waterSummer"))
+//                                .waterAutumn(obj.getInt("waterAutumn"))
+//                                .waterWinter(obj.getInt("waterWinter"))
 //                                .imgBytes(imgFile.readAllBytes())
 //                                .build();
 //
