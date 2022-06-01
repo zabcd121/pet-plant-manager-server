@@ -35,6 +35,16 @@ public class PlantAppService {
         }
     }
 
+    public PlantDTO retrieveByID(PlantDTO dto){
+        Plant plant = plantRepo.findByID(dto.getPk());
+
+        if(plant==null){
+            return null;
+        }else{
+            return ModelMapper.modelToDTO(plant, PlantDTO.class);
+        }
+    }
+
     public List<PlantDTO> recommendPlant(PlantDTO dto){
         PlantRecommendService plantRecommendService = new PlantRecommendService(plantRepo);
 

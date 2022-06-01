@@ -35,6 +35,12 @@ public class PetPlantController {
             case "watering":{
                 return processWatering(req);
             }
+            case "wateringDelete":{
+                return processWateringDelete(req);
+            }
+            case "monthWatering":{
+                return processMonthWatering(req);
+            }
         }
 
         return null;
@@ -156,5 +162,44 @@ public class PetPlantController {
 
         return res;
     }
+
+    private Response processWateringDelete(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case POST:{
+                try{
+                    petPlantAppService.deleteWatering((WateringDTO) req.data.get("wateringDTO"));
+                    res = new Response(Response.StatusCode.SUCCESS);
+                }catch (IllegalArgumentException e){
+                    res = new Response(Response.StatusCode.FAIL);
+                    res.data.put("messageDTO", new MessageDTO(e.getMessage()));
+                }
+                break;
+            }
+        }
+
+        return res;
+    }
+
+    private Response processMonthWatering(Request req) {
+        Response res = null;
+
+        switch (req.method){
+            case GET :{
+                List<WateringDTO> data = petPlantAppService.retrieveWateringBy((WateringDTO) req.data.get("wateringDTO"));
+
+                if(data.size()==0){
+                    res = new Response(Response.StatusCode.FAIL);
+                }else{
+                    res = new Response(Response.StatusCode.SUCCESS);
+                    res.data.put("wateringDTOList", data);
+                }
+            }
+        }
+
+        return res;
+    }
+
 
 }

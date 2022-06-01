@@ -1,5 +1,9 @@
 package infra.network;
 
+import domain.repository.AccountRepository;
+import domain.repository.PetPlantRepository;
+import domain.repository.PlantRepository;
+import domain.repository.WateringRepository;
 import controller.DiaryController;
 import domain.repository.*;
 
@@ -12,8 +16,8 @@ public class Listener {
     private final AccountRepository accRepo;
     private final PlantRepository plantRepo;
     private final PetPlantRepository petPlantRepo;
-    private final NoticeRepository noticeRepo;
     private final WateringRepository wateringRepo;
+    private final NoticeRepository noticeRepo;
     private final DiaryRepository diaryRepo;
 
     public Listener(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, WateringRepository wateringRepo, NoticeRepository noticeRepo, DiaryRepository diaryRepo){

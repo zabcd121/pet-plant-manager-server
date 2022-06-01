@@ -18,9 +18,10 @@ public class RDBWateringRepository extends AbstractRepository<Watering> implemen
     private static final String WATERING_PK = "watering_PK";
     private static final String PET_PLANT_PK = "petplant_PK";
     private static final String WATERING_DAY = "watering_day";
+    private static final String USER_PK = "user_PK";
 
     private final static String[] INSERT_OR_UPDATE_COLUMN_NAMES = {
-            PET_PLANT_PK, WATERING_DAY
+            PET_PLANT_PK, WATERING_DAY, USER_PK
     };
 
     @Override
@@ -55,6 +56,7 @@ public class RDBWateringRepository extends AbstractRepository<Watering> implemen
                 ps -> {
                     ps.setLong(1, dto.getPetPlantPK());
                     ps.setDate(2, Date.valueOf(dto.getWateringDay()));
+                    ps.setLong(3, dto.getUserPK());
                 }
         );
     }
@@ -65,7 +67,8 @@ public class RDBWateringRepository extends AbstractRepository<Watering> implemen
                 ps -> {
                     ps.setLong(1, dto.getPetPlantPK());
                     ps.setDate(2, Date.valueOf(dto.getWateringDay()));
-                    ps.setLong(3, dto.getWateringPK());
+                    ps.setLong(3, dto.getUserPK());
+                    ps.setLong(4, dto.getWateringPK());
                 }
         );
     }
@@ -91,6 +94,7 @@ public class RDBWateringRepository extends AbstractRepository<Watering> implemen
                     .wateringPK(rs.getLong(WATERING_PK))
                     .wateringDay(rs.getDate(WATERING_DAY).toLocalDate())
                     .petPlantPK(rs.getLong(PET_PLANT_PK))
+                    .userPK(rs.getLong(USER_PK))
                     .build();
         }
 
@@ -107,6 +111,7 @@ public class RDBWateringRepository extends AbstractRepository<Watering> implemen
                         .wateringPK(rs.getLong(WATERING_PK))
                         .wateringDay(rs.getDate(WATERING_DAY).toLocalDate())
                         .petPlantPK(rs.getLong(PET_PLANT_PK))
+                        .userPK(rs.getLong(USER_PK))
                         .build()
             );
         }
