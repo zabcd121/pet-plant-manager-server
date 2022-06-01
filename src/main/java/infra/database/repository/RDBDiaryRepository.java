@@ -1,25 +1,20 @@
 package infra.database.repository;
 
-import domain.model.Notice;
-import domain.model.Post;
-import domain.repository.NoticeRepository;
-import domain.repository.PostRepository;
+import domain.model.Diary;
+import domain.repository.DiaryRepository;
 import dto.ModelMapper;
-import dto.NoticeDTO;
-import dto.PostDTO;
+import dto.DiaryDTO;
 import infra.database.option.Option;
 import infra.database.option.post.PKOption;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RDBAPostRepository extends AbstractRepository<Post> implements PostRepository {
+public class RDBADiaryRepository extends AbstractRepository<Diary> implements DiaryRepository {
 
         private final static String TABLE_NAME = "posts";
         private final static String POST_PK = "post_PK";
@@ -33,7 +28,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                 TITLE, CONTENT, PHOTO
         };
 
-        private long add(PostDTO dto) {
+        private long add(DiaryDTO dto) {
             return executeInsert(
                     SQLMaker.makeInsertSql(
                             TABLE_NAME, INSERT_OR_UPDATE_COLUMN_NAMES
@@ -48,7 +43,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
             );
         }
 
-        private void update(PostDTO dto) {
+        private void update(DiaryDTO dto) {
             executeUpdateOrDelete(
                     SQLMaker.makeUpdateSql(
                             TABLE_NAME, POST_PK, INSERT_OR_UPDATE_COLUMN_NAMES
@@ -64,18 +59,18 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
         }
 
         @Override
-        public Post findByID(long id) {
+        public Diary findByID(long id) {
             return executeFindOne( SQLMaker.makeSelectSql(TABLE_NAME, new PKOption(id)));
         }
 
         @Override
-        public List<Post> findByOption(Option... options) {
+        public List<Diary> findByOption(Option... options) {
             return executeFindList(SQLMaker.makeSelectSql(TABLE_NAME, options));
         }
 
         @Override
-        public long save(Post post) {
-            PostDTO dto = ModelMapper.<Post, PostDTO>modelToDTO(post, PostDTO.class);
+        public long save(Diary diary) {
+            DiaryDTO dto = ModelMapper.<Diary, DiaryDTO>modelToDTO(diary, DiaryDTO.class);
 
             if(dto.getPk()<=0){
                 return add(dto);
@@ -86,8 +81,8 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
         }
 
         @Override
-        public void remove(Post post) {
-            PostDTO dto = ModelMapper.<Post, PostDTO>modelToDTO(post, PostDTO.class);
+        public void remove(Diary diary) {
+            DiaryDTO dto = ModelMapper.<Diary, DiaryDTO>modelToDTO(diary, DiaryDTO.class);
 
             executeUpdateOrDelete(
                     SQLMaker.makeDeleteSql(
@@ -101,8 +96,8 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
 
 
         @Override
-        protected Post restoreObject(ResultSet rs) throws SQLException {
-            Post post = null;
+        protected Diary restoreObject(ResultSet rs) throws SQLException {
+            Diary diary = null;
 
             while(rs.next()){
                 Blob blob = rs.getBlob(PHOTO);
@@ -113,7 +108,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                     e.printStackTrace();
                 }
 
-                post = Post.builder()
+                diary = Diary.builder()
                         .pk(rs.getLong(POST_PK))
                         .petPk(rs.getLong(PET_PK))
                         .title(rs.getString(TITLE))
@@ -124,12 +119,12 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
             }
 
 
-            return post;
+            return diary;
         }
 
         @Override
-        protected List<Post> restoreList(ResultSet rs) throws SQLException {
-            List<Post> list = new ArrayList<>();
+        protected List<Diary> restoreList(ResultSet rs) throws SQLException {
+            List<Diary> list = new ArrayList<>();
             Blob blob = rs.getBlob(PHOTO);
             byte[] imgBytes = new byte[(int) blob.length()];
             try{
@@ -138,7 +133,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                 e.printStackTrace();
             }
             while(rs.next()){
-                Post post = Post.builder()
+                Diary diary = Diary.builder()
                         .pk(rs.getLong(POST_PK))
                         .petPk(rs.getLong(PET_PK))
                         .title(rs.getString(TITLE))
@@ -147,7 +142,7 @@ public class RDBAPostRepository extends AbstractRepository<Post> implements Post
                         .imgBytes(imgBytes)
                         .build();
 
-                list.add(post);
+                list.add(diary);
             }
 
             return list;

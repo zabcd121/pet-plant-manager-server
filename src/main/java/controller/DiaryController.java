@@ -1,6 +1,5 @@
 package controller;
 
-import application.NoticeAppService;
 import application.PostAppService;
 import domain.repository.*;
 import dto.*;
@@ -44,14 +43,14 @@ public class PostController {
         switch (req.method){
             case POST :{
                 String errorMsg = null;
-                PostDTO postDTO = null;
+                DiaryDTO diaryDTO = null;
 
                 try{
-                    postDTO = postAppService.createPost((PostDTO) req.data.get("postDTO"));
+                    diaryDTO = postAppService.createPost((DiaryDTO) req.data.get("postDTO"));
                 }catch(IllegalArgumentException e){
                     errorMsg = e.getMessage();
                 }finally {
-                    if(postDTO==null){
+                    if(diaryDTO ==null){
                         res = new Response(Response.StatusCode.FAIL);
                         res.data.put("messageDTO", new MessageDTO(errorMsg));
                     }else{
@@ -59,11 +58,11 @@ public class PostController {
                     }
 
                 }
-                res.data.put("postDTO", postDTO);
+                res.data.put("postDTO", diaryDTO);
             }
 
             case GET:{
-                List<PostDTO> resData = null;
+                List<DiaryDTO> resData = null;
 
                 resData = postAppService.retrieveAll(req.token);
 
@@ -84,9 +83,9 @@ public class PostController {
 
         switch (req.method){
             case GET:{
-                List<PostDTO> resData = null;
+                List<DiaryDTO> resData = null;
 
-                resData = postAppService.retrieve(((PostDTO)req.data.get("PostDTO")).getPetPk());
+                resData = postAppService.retrieve(((DiaryDTO)req.data.get("PostDTO")).getPetPk());
 
                 if(resData.size()==0){
                     res = new Response(Response.StatusCode.FAIL);
@@ -107,7 +106,7 @@ public class PostController {
         switch (req.method){
             case POST :{
                 try{
-                    postAppService.delete((PostDTO) req.data.get("postDTO"));
+                    postAppService.delete((DiaryDTO) req.data.get("postDTO"));
                     res = new Response(Response.StatusCode.SUCCESS);
                 }catch(IllegalArgumentException e){
                     MessageDTO errorMsg = new MessageDTO(e.getMessage());
@@ -125,11 +124,11 @@ public class PostController {
 
         switch (req.method){
             case POST :{
-                PostDTO resData = null;
+                DiaryDTO resData = null;
                 MessageDTO errorMsg = null;
 
                 try{
-                    resData = postAppService.update((PostDTO) req.data.get("postDTO"));
+                    resData = postAppService.update((DiaryDTO) req.data.get("postDTO"));
                     res = new Response(Response.StatusCode.SUCCESS);
                     res.data.put("postDTO", resData);
                 }catch (IllegalArgumentException e){
