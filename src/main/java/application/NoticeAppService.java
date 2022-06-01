@@ -6,10 +6,17 @@ import domain.model.Notice;
 import domain.model.PetPlant;
 import domain.model.Plant;
 import domain.repository.AccountRepository;
+import domain.repository.NoticeRepository;
 import domain.repository.PetPlantRepository;
 import domain.repository.PlantRepository;
+import domain.service.PetPlantManageSystem;
 import dto.AccountDTO;
+import dto.ModelMapper;
+import dto.NoticeDTO;
+import dto.PetPlantDTO;
 import infra.database.option.account.PKOption;
+import infra.database.option.account.TokenOption;
+import infra.database.option.petPlant.UserPKOption;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 public class NoticeAppService {
@@ -30,20 +38,26 @@ public class NoticeAppService {
     private AccountRepository accRepo;
     private PetPlantRepository petRepo;
     private PlantRepository plantRepo;
+    private NoticeRepository noticeRepo;
 
 
-    public NoticeAppService(AccountRepository accRepo, PetPlantRepository petRepo, PlantRepository plantRepo){
+    public NoticeAppService(AccountRepository accRepo, PetPlantRepository petRepo, PlantRepository plantRepo, NoticeRepository noticeRepo){
         this.accRepo = accRepo;
         this.petRepo = petRepo;
         this.plantRepo = plantRepo;
+        this.noticeRepo = noticeRepo;
     }
 
-    public Set<Notice> create(AccountDTO accDTO){ //아침 9시에 알림 보냄
+    public List<NoticeDTO> createNotice(AccountDTO accDTO) { //아침 9시에 알림 보냄
 
-        Set<Notice> notices = new HashSet<Notice>();
+        List<Notice> noticeList = new ArrayList<>();
+        List<NoticeDTO> noticeDTOList = new ArrayList<>();
         Notice notice;
 
         try {
+            if(noticeRepo.findByOption(new PKOption(accDTO.getPk())) != null){
+                return null;
+            }
 //            URL url = new URL(OPEN_WEATHER_URL + "lat=" + accDTO.getLat() + "&lon=" + accDTO.getLon() + "&lang=kr&units=metric&appid=" + OPEN_WEATHER_USER_KEY);
             URL url = new URL(OPEN_WEATHER_URL + "lat=36.1379262" +  "&lon=128.411519"  + "&lang=kr&units=metric&appid=" + OPEN_WEATHER_USER_KEY);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -70,6 +84,7 @@ public class NoticeAppService {
             int weather_id = Integer.parseInt(weatherObj.get("id").toString());
             System.out.println("최저 기온: " + temp_min + " 최대 기온: " + temp_max + " 습도: " + humidity + " 날씨 상태: " + weather_id);
 
+
             long accPk = accDTO.getPk();
 
             List<PetPlant> pets = petRepo.findByOption(new PKOption(accPk));
@@ -79,22 +94,25 @@ public class NoticeAppService {
                 notice = Notice.builder()
                             .targetAccId(accPk)
                             .targetPetId(0)
-                            .message("일교차가 심하니 식물들을 실내로 넣어주세요")
-                            .noticedTime(new Date())
+                            .content("일교차가 심하니 식물들을 실내로 넣어주세요")
+                            .noticedTime(LocalDate.now())
                             .build();
 
-                notices.add(notice);
+                noticeList.add(notice);
             }else if( weather_id == 800){
                 notice = Notice.builder()
                         .targetAccId(accPk)
                         .targetPetId(0)
-                        .message("오늘 날씨가 좋아요 식물들 햇빛을 보게 해주세요")
-                        .noticedTime(new Date())
+                        .content("오늘 날씨가 좋아요 식물들 햇빛을 보게 해주세요")
+                        .noticedTime(LocalDate.now())
                         .build();
+                noticeList.add(notice);
             }
 
             PetPlant pet;
             long plantID;
+            long petID;
+            String petName;
             Plant plant;
             int petGrowthTp;
 
@@ -102,31 +120,41 @@ public class NoticeAppService {
 
                 pet = (PetPlant) iter.next();
                 plantID = pet.getPlantID();
+                petID = pet.getPk();
+                petName = pet.getPetName();
                 plant = plantRepo.findByID(plantID);
                 petGrowthTp = plant.getGrowthTp();
 
                 if(temp_max >= petGrowthTp){
                     notice = Notice.builder()
                             .targetAccId(accPk)
-                            .targetPetId(plantID)
-                            .message("오늘 최고온도가 " + temp_max +"℃ " + "로 "  + pet.getPetName() + "이가 위험하니 조심해주세요!")
-                            .noticedTime(new Date())
+                            .targetPetId(petID)
+                            .targetPetName(petName)
+                            .content("오늘 최고온도가 " + temp_max + "℃ " + "로 "  + petName + "이가 위험하니 조심해주세요!")
+                            .noticedTime(LocalDate.now())
                             .build();
 
-                    notices.add(notice);
+                    noticeList.add(notice);
 
                 }else if(temp_min <= petGrowthTp){
                     notice = Notice.builder()
                             .targetAccId(accPk)
-                            .targetPetId(plantID)
-                            .message("오늘 최고온도가 " + temp_max +"℃ " + "로 "  + pet.getPetName() + "이가 위험하니 조심해주세요!")
-                            .noticedTime(new Date())
+                            .targetPetId(petID)
+                            .targetPetName(petName)
+                            .content("오늘 최고온도가 " + temp_max +"℃ " + "로 "  + pet.getPetName() + "이가 위험하니 조심해주세요!")
+                            .noticedTime(LocalDate.now())
                             .build();
 
-                    notices.add(notice);
+                    noticeList.add(notice);
                 }
             }
+            String petPlantName;
+            for(Notice n : noticeList){
+                noticeRepo.save(n);
+                noticeDTOList.add(ModelMapper.<Notice, NoticeDTO>modelToDTO(n, NoticeDTO.class));
+            }
 
+            return noticeDTOList;
 
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
@@ -135,6 +163,29 @@ public class NoticeAppService {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        return null;
+
     }
+
+    public List<NoticeDTO> retrieveNotices(String token){
+
+        Account acc = accRepo.findByOption(new TokenOption(token)).get(0);
+
+        List<Notice> list = noticeRepo.findByOption(new UserPKOption(acc.getPk()));
+        List<NoticeDTO> resList = new ArrayList<>();
+
+        for(Notice notice : list){
+            resList.add(
+                    ModelMapper.<Notice, NoticeDTO>modelToDTO(notice, NoticeDTO.class)
+            );
+        }
+
+        return resList;
+    }
+
+    public void deleteNotice() throws IllegalArgumentException{
+
+        noticeRepo.remove();
+
+    }
+
 }

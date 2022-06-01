@@ -67,6 +67,10 @@ public class SQLMaker {
         return String.format("DELETE FROM %s WHERE %s=?", tableName, pkColName);
     }
 
+    public static String makeDeleteAllSql(String tableName){
+        return String.format("DELETE FROM %s", tableName);
+    }
+
     private static String makeOptionSQL(String sql, Option...options){
         String and = " AND ";
         String where = " WHERE ";
