@@ -36,5 +36,4 @@ public class AccountAppService {
         return accDomainService.signUp(accDTO.getId(), accDTO.getPassword());
     }
 
-
 }

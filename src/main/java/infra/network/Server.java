@@ -1,6 +1,10 @@
 package infra.network;
 
 import controller.MainController;
+import domain.repository.AccountRepository;
+import domain.repository.PetPlantRepository;
+import domain.repository.PlantRepository;
+import domain.repository.WateringRepository;
 import domain.repository.*;
 
 import java.io.*;

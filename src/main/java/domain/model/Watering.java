@@ -12,5 +12,6 @@ import java.time.LocalDate;
 public class Watering {
     private long wateringPK;
     private long petPlantPK;
+    private long userPK;
     private LocalDate wateringDay;
 }

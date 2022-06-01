@@ -12,6 +12,7 @@ import dto.PetPlantDTO;
 import dto.WateringDTO;
 import infra.database.option.account.TokenOption;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +82,25 @@ public class PetPlantAppService {
         return resList;
     }
 
+    public List<WateringDTO> retrieveWateringBy(WateringDTO dto){
+        List<Watering> list = petPlantManageSystem.retrieveWateringBy(dto.getUserPK(), dto.getWateringDay());
+        List<WateringDTO> resList = new ArrayList<>();
+
+        for(Watering watering : list){
+            resList.add(
+                    ModelMapper.<Watering, WateringDTO>modelToDTO(watering, WateringDTO.class)
+            );
+        }
+
+        return resList;
+    }
+
     public WateringDTO createWatering(WateringDTO dto){
-        Watering watering = petPlantManageSystem.createWatering(dto.getPetPlantPK(), dto.getWateringDay());
+        Watering watering = petPlantManageSystem.createWatering(dto.getPetPlantPK(), dto.getWateringDay(), dto.getUserPK());
         return ModelMapper.modelToDTO(watering, WateringDTO.class);
+    }
+
+    public void deleteWatering(WateringDTO dto){
+        petPlantManageSystem.deleteWatering(dto.getWateringPK());
     }
 }

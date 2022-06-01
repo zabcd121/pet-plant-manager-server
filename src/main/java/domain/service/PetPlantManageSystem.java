@@ -7,6 +7,7 @@ import domain.repository.WateringRepository;
 import infra.database.option.petPlant.NameOption;
 import infra.database.option.petPlant.UserPKOption;
 import infra.database.option.watering.DateOption;
+import infra.database.option.watering.MonthDateOption;
 import infra.database.option.watering.PetPlantPKOption;
 
 import java.time.LocalDate;
@@ -79,7 +80,16 @@ public class PetPlantManageSystem {
         return wateringRepo.findByOption(new PetPlantPKOption(petPlantID));
     }
 
-    public Watering createWatering(long petPlantID, LocalDate wateringDay){
+    public List<Watering> retrieveWateringBy(long userID, LocalDate date) {
+        List<Watering> list = wateringRepo.findByOption(
+                new infra.database.option.watering.UserPKOption(userID),
+                new MonthDateOption(date)
+        );
+
+        return list;
+    }
+
+    public Watering createWatering(long petPlantID, LocalDate wateringDay, long userID){
         List<Watering> list = wateringRepo.findByOption(
                 new DateOption(wateringDay), new PetPlantPKOption(petPlantID)
         );
@@ -89,10 +99,20 @@ public class PetPlantManageSystem {
         }
 
         long pk = wateringRepo.save(
-                Watering.builder().petPlantPK(petPlantID).wateringDay(wateringDay).build()
+                Watering.builder().petPlantPK(petPlantID).wateringDay(wateringDay).userPK(userID).build()
         );
 
         return wateringRepo.findByID(pk);
+    }
+
+    public void deleteWatering(long wateringPK){
+        Watering watering = wateringRepo.findByID(wateringPK);
+
+        if(watering==null){
+            throw new IllegalArgumentException("존재하지 않는 PK 입니다.");
+        }else{
+            wateringRepo.remove(watering);
+        }
     }
 
     private boolean isExisitingPetName(long userID, String petName){
@@ -105,5 +125,4 @@ public class PetPlantManageSystem {
 
         return true;
     }
-
 }

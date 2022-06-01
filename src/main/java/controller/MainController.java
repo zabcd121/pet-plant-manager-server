@@ -1,5 +1,9 @@
 package controller;
 
+import domain.repository.AccountRepository;
+import domain.repository.PetPlantRepository;
+import domain.repository.PlantRepository;
+import domain.repository.WateringRepository;
 import domain.model.Notice;
 import domain.repository.*;
 import infra.network.Request;
@@ -10,8 +14,8 @@ public class MainController {
     private final PlantController plantController;
     private final PetPlantController petPlantController;
     private final NoticeController noticeController;
-
     private final DiaryController diaryController;
+
 
 
     public MainController(AccountRepository accRepo, PlantRepository plantRepo, PetPlantRepository petPlantRepo, NoticeRepository noticeRepo, WateringRepository wateringRepo, DiaryRepository diaryRepo) {
