@@ -9,8 +9,14 @@ import infra.database.repository.RDBWateringRepository;
 
 import javax.swing.text.DateFormatter;
 import domain.model.Diary;
+import domain.model.Notice;
+import infra.database.option.diary.UserPKOption;
 import infra.database.repository.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,9 +32,22 @@ public class Test {
 //        l.run();
 
         RDBDiaryRepository p = new RDBDiaryRepository();
-        Diary diary = Diary.builder().pk(0).userPK(1).petPlantPK(27).title("제목1").content("내용1").diaryImg(new byte[3]).date(LocalDate.now()).build();
-        Diary diary1 = p.findByID(4);
-        System.out.println(diary1.toString());
+
+        p.remove(Diary.builder().pk(5).build());
+//        p.save(diary);
+
+//            byte[] arr = {0x0001, 0x0002};
+//            p.save(
+//                    Diary.builder().pk(0).userPK(8).petPlantPK(37).title("new").content("내용12").diaryImg(arr).date(LocalDate.now()).build()
+//
+//            );
+
+
+
+//        RDBNoticeRepository n = new RDBNoticeRepository();
+//        Notice notice = Notice.builder().pk(0).targetAccId(1).targetPetId(27).targetPetName("찐이야").content("ㅉㄴㅉㄴㅉㄴ").noticedTime(LocalDate.now()).build();
+//        notice.toString();
+//        n.findByID(1);
 
 //        RDBPetPlantRepository p = new RDBPetPlantRepository();
 //
@@ -232,5 +251,10 @@ public class Test {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-    }
-}
+//    } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+    }}

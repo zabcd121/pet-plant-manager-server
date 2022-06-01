@@ -8,6 +8,7 @@ import dto.ModelMapper;
 import dto.NoticeDTO;
 import infra.database.option.Option;
 import infra.database.option.account.PKOption;
+import infra.database.option.notice.UserPKOption;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ public class RDBNoticeRepository extends AbstractRepository<Notice> implements N
 
     @Override
     public Notice findByID(long id){
-        return executeFindOne( SQLMaker.makeSelectSql(TABLE_NAME, new PKOption(id)));
+        return executeFindOne( SQLMaker.makeSelectSql(TABLE_NAME, new UserPKOption(id)));
     }
 
     @Override

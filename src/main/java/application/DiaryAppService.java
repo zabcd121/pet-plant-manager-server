@@ -2,9 +2,11 @@ package application;
 
 import domain.model.Diary;
 import domain.repository.DiaryRepository;
+import dto.AccountDTO;
 import dto.ModelMapper;
 import dto.DiaryDTO;
 import infra.database.option.account.TokenOption;
+import infra.database.option.diary.UserPKOption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +45,8 @@ public class DiaryAppService {
         diaryRepo.remove(diary);
     }
 
-    public List<DiaryDTO> retrieveAll(String token){
-        List<Diary> diaries = diaryRepo.findByOption(new TokenOption(token));
+    public List<DiaryDTO> retrieveAll(AccountDTO accDTO){
+        List<Diary> diaries = diaryRepo.findByOption(new UserPKOption(accDTO.getPk()));
         List<DiaryDTO> diaryDTOList = new ArrayList<>();
 
         for(Diary p : diaries){
