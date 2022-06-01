@@ -1,15 +1,10 @@
 package controller;
 
 import application.NoticeAppService;
-import application.PetPlantAppService;
-import domain.repository.AccountRepository;
-import domain.repository.NoticeRepository;
-import domain.repository.PetPlantRepository;
-import domain.repository.PlantRepository;
+import domain.repository.*;
 import dto.AccountDTO;
 import dto.MessageDTO;
 import dto.NoticeDTO;
-import dto.PetPlantDTO;
 import infra.network.Request;
 import infra.network.Response;
 
@@ -19,8 +14,8 @@ public class NoticeController {
 
     private final NoticeAppService noticeAppService;
 
-    public NoticeController(AccountRepository accRepository, PetPlantRepository petPlantRepo, PlantRepository plantRepo, NoticeRepository noticeRepo) {
-        noticeAppService = new NoticeAppService(accRepository, petPlantRepo, plantRepo, noticeRepo);
+    public NoticeController(AccountRepository accRepository, PetPlantRepository petPlantRepo, PlantRepository plantRepo, NoticeRepository noticeRepo, WateringRepository wateringRepo) {
+        noticeAppService = new NoticeAppService(accRepository, petPlantRepo, plantRepo, noticeRepo, wateringRepo);
     }
 
     public Response handle(Request req) {

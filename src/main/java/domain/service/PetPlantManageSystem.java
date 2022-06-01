@@ -51,9 +51,8 @@ public class PetPlantManageSystem {
             throw new IllegalArgumentException("나의 반려식물이 아닙니다.");
         }
 
-        if(changeName!=null){
+        if(changeName!=null && !changeName.equals(petPlant.getPetName())){
             //현재 사용자의 반려식물 중에 중복되는 이름이 있을 경우 변경 불가
-            System.out.println("changeName = " + changeName);
             if(isExisitingPetName(userID, changeName)){
                 throw new IllegalArgumentException("중복되는 반려식물 이름입니다.");
             }
@@ -77,7 +76,7 @@ public class PetPlantManageSystem {
             throw new IllegalArgumentException("존재하지 않는 PK 입니다.");
         }
 
-        if(petPlant.checkOwner(userID)){
+        if(!petPlant.checkOwner(userID)){
             throw new IllegalArgumentException("나의 반려식물이 아닙니다.");
         }
 

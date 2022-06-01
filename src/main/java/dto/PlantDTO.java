@@ -3,6 +3,7 @@ package dto;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @ToString
 @Getter
@@ -26,4 +27,30 @@ public class PlantDTO implements Serializable {
 
     @Builder.Default
     private byte[] imgBytes = new byte[0];
+
+    public int getSeasonWaterCycle(){
+        int curMonth = LocalDate.now().getMonth().getValue();
+
+        switch(curMonth){
+            case 12:
+            case 1:
+            case 2:
+                return waterWinter;
+            case 3:
+            case 4:
+            case 5:
+                return waterSpring;
+            case 6:
+            case 7:
+            case 8:
+                return waterSummer;
+            case 9:
+            case 10:
+            case 11:
+                return waterAutumn;
+        }
+
+        return 0;
+
+    }
 }

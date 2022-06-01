@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Setter
 public class Notice {
     private long pk;
     private long targetAccId;

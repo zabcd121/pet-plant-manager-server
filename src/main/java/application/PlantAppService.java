@@ -5,7 +5,9 @@ import domain.repository.PlantRepository;
 import domain.service.PlantRecommendService;
 import dto.ModelMapper;
 import dto.PlantDTO;
+import dto.WateringDTO;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class PlantAppService {
 
         List<Plant> recommendedPlants = plantRecommendService.recommend(
                 dto.getLightDemand(), dto.getHumidity(), dto.getGrowthTp(),
-                dto.getGrowthSpeed(), dto.getMngLevel()
+                dto.getGrowthSpeed(), dto.getMngLevel(), dto.getClCode(), dto.getSeasonWaterCycle()
         );
 
         List<PlantDTO> res = new ArrayList<>();
@@ -67,4 +69,5 @@ public class PlantAppService {
 
         return res;
     }
+
 }
