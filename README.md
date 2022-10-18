@@ -39,17 +39,21 @@ https://developers.kakao.com/docs/latest/ko/local/common
 
 ## 5. 화면 UI
 
-1. 회원가입 및 주소등록
+#### 1. 회원가입 및 주소등록
+
 <img width="726" alt="image" src="https://user-images.githubusercontent.com/68465716/196345984-d75aff90-9697-4f88-8248-2ced07f0bbcd.png">
 <img width="726" alt="image" src="https://user-images.githubusercontent.com/68465716/196345943-1d7e4328-6197-47dc-a700-7e07a34563cd.png">
 
-2. 반려 식물 관리 상세 정보 조회
+#### 2. 반려 식물 관리 상세 정보 조회
+
 ![image](https://user-images.githubusercontent.com/68465716/196346108-13d63076-fbcd-4726-990b-e2c101ef9472.png)
 
-3. 식물 정보 조회
+#### 3. 식물 정보 조회
+
 <img width="753" alt="image" src="https://user-images.githubusercontent.com/68465716/196346158-5909dd79-2739-4fdc-bf0a-25c873c32a71.png">
 
-4. 반려식물 추천 결과
+#### 4. 반려식물 추천 결과
+
 ![image](https://user-images.githubusercontent.com/68465716/196346302-2e5b3316-be78-4ca6-b3bb-50e2566f2868.png)
 
 
