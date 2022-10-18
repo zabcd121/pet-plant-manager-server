@@ -1,6 +1,6 @@
 # 반려식물 관리 서비스
 
-## 주요 기능
+## 1. 주요 기능
 1. 반려식물 추천
   - 실내전원용 식물 API에 있는 관리 난이도, 가격, 물주는 주기에 대한 사용자 선호를 입력받아서 코사인 유사도를 통해 적합한 반려식물을 추천해준다.
 
@@ -11,6 +11,23 @@
     
 3. 반려식물 다이어리 작성
 
-##ER Diagram
+## 2, ER Diagram
 
 <img width="719" alt="image" src="https://user-images.githubusercontent.com/68465716/196342960-4b45e16f-6934-4869-854c-3ce2af0173f1.png">
+
+## 3. 데이터 출처
+3. 1. 농사로 - 실내정원용 식물 API
+https://www.nongsaro.go.kr/portal/ps/psz/psza/contentNsMain.ps?menuId=PS03954
+
+2. OpenWeather - Daily Forecast 16 Days API
+https://openweathermap.org/forecast16
+
+3. Kakao developers - 로컬 API
+https://developers.kakao.com/docs/latest/ko/local/common
+
+## 사용된 데이터
+<img width="947" alt="image" src="https://user-images.githubusercontent.com/68465716/196345008-c7444dbe-1287-4b80-b4c4-926aa1e74b68.png">
+<img width="938" alt="image" src="https://user-images.githubusercontent.com/68465716/196345038-487a1d7c-d937-42fd-a57f-28bc1b392d74.png">
+<img width="920" alt="image" src="https://user-images.githubusercontent.com/68465716/196345079-5509b56c-7e01-4a63-8dfd-3ee173ecfce8.png">
+
+  
